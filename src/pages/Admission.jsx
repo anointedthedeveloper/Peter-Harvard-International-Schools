@@ -5,6 +5,7 @@ import { User, Phone, MapPin, Upload, ChevronRight, X, CheckCircle, BookOpen } f
 const inputClass = 'w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary transition-all dark:text-white text-sm';
 
 const CLASSES = [
+  'Crèche', 'Playgroup', 'Pre-Nursery',
   'Nursery 1', 'Nursery 2',
   'Primary 1', 'Primary 2', 'Primary 3', 'Primary 4', 'Primary 5', 'Primary 6',
   'JSS 1', 'JSS 2', 'JSS 3',
