@@ -302,6 +302,67 @@ const About = () => {
         </div>
       </section>
 
+      {/* ── Our Team ── */}
+      <section className="py-20 md:py-28 bg-white dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div {...fadeIn} className="text-center mb-14">
+            <p className="text-secondary text-xs font-bold uppercase tracking-widest mb-3">The People Behind PHIS</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3">Our Team</h2>
+            <div className="w-16 h-1 bg-secondary mx-auto rounded-full" />
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Dr. Peter — real card */}
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
+              whileHover={{ y: -6, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
+              className="group flex flex-col items-center text-center cursor-default"
+            >
+              <div className="w-40 h-48 overflow-hidden rounded-2xl mb-4 shadow-xl relative">
+                <img
+                  src="/assets/Drpeter.png"
+                  alt="Dr. Peter Oyedotun Agunloye"
+                  loading="lazy"
+                  className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-secondary/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              </div>
+              <h4 className="font-bold text-gray-900 dark:text-white">Dr. Peter Oyedotun Agunloye</h4>
+              <p className="text-secondary text-xs font-semibold uppercase tracking-widest mt-1">Founder &amp; Proprietor</p>
+              <div className="flex gap-1.5 mt-2 flex-wrap justify-center">
+                {['FCA', 'Ph.D'].map(c => (
+                  <span key={c} className="text-xs bg-red-50 dark:bg-red-900/20 text-secondary border border-secondary/20 px-2 py-0.5 rounded-full font-bold">{c}</span>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Placeholder cards */}
+            {[1, 2, 3].map((_, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ delay: (idx + 1) * 0.08, duration: 0.5, ease: 'easeOut' }}
+                className="flex flex-col items-center text-center"
+              >
+                <div className="w-40 h-48 rounded-2xl mb-4 shadow-md bg-gray-100 dark:bg-gray-800 border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-2">
+                  <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                    <Users size={22} className="text-gray-400" />
+                  </div>
+                  <p className="text-xs text-gray-400 font-medium">Photo coming soon</p>
+                </div>
+                <h4 className="font-bold text-gray-400 dark:text-gray-500">Team Member</h4>
+                <p className="text-gray-400 text-xs font-semibold uppercase tracking-widest mt-1">Role — Coming Soon</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 };

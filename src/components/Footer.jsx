@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -22,14 +22,15 @@ const Footer = () => {
             </p>
             <div className="flex gap-3">
               {[
-                { icon: Facebook, href: '#' },
-                { icon: Twitter, href: '#' },
-                { icon: Instagram, href: '#' },
-                { icon: Linkedin, href: '#' },
+                { icon: Facebook, href: 'https://www.facebook.com/peterharvardschools/' },
+                { icon: Instagram, href: 'https://www.instagram.com/peterharvard1/' },
+                { icon: Linkedin, href: 'https://ng.linkedin.com/in/dr-peter-oyedotun-agunloye' },
               ].map(({ icon: Icon, href }, i) => (
                 <a
                   key={i}
                   href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-9 h-9 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-secondary hover:text-white transition-all duration-200"
                 >
                   <Icon size={16} />
@@ -76,7 +77,7 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
                 <Mail className="text-secondary flex-shrink-0" size={16} />
-                <span>info@phis.edu</span>
+                <a href="mailto:peterharvardschools@yahoo.com" className="hover:text-secondary transition-colors">peterharvardschools@yahoo.com</a>
               </li>
             </ul>
           </div>
