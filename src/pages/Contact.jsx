@@ -6,7 +6,7 @@ const contactItems = [
   { icon: MapPin, title: 'Our Location', content: 'No 1/2 Dr Peter Agunloye Dr, Kubwa, Abuja 901101, FCT' },
   { icon: Phone, title: 'Phone Numbers', content: '08182277020 · 08033570685 · 08062134991' },
   { icon: Mail, title: 'Email Address', content: 'info@phis.edu' },
-  { icon: Clock, title: 'School Hours', content: 'Mon - Fri: 8:00 AM - 4:00 PM' },
+  { icon: Clock, title: 'School Hours', content: 'Mon - Fri: 7:00 AM - 5:00 PM' },
 ];
 
 const Contact = () => {

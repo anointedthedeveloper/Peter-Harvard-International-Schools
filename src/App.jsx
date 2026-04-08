@@ -12,6 +12,7 @@ import Gallery from './pages/Gallery';
 import Contact from './pages/Contact';
 import Portal from './pages/Portal';
 import Developer from './pages/Developer';
+import Admission from './pages/Admission';
 
 // Scroll to top on every route change
 const RouteScrollReset = () => {
@@ -33,6 +34,7 @@ const AnimatedRoutes = () => {
         <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
         <Route path="/portal" element={<PageTransition><Portal /></PageTransition>} />
         <Route path="/developer" element={<PageTransition><Developer /></PageTransition>} />
+        <Route path="/admission" element={<PageTransition><Admission /></PageTransition>} />
       </Routes>
     </AnimatePresence>
   );

@@ -103,7 +103,7 @@ const Home = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
                 <Link
-                  to="/contact"
+                  to="/admission"
                   className="flex items-center gap-2 bg-secondary hover:bg-red-700 text-white px-8 py-4 rounded-full text-base font-bold transition-colors shadow-2xl shadow-red-500/30"
                 >
                   Apply Now <ChevronRight size={18} />
@@ -281,7 +281,7 @@ const Home = () => {
           <p className="text-lg mb-10 opacity-80">Enrollment is currently open for the upcoming academic session.</p>
           <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }} className="inline-block">
             <Link
-              to="/contact"
+              to="/admission"
               className="bg-white text-secondary hover:bg-gray-100 px-10 py-4 rounded-full text-base font-bold transition-colors shadow-2xl"
             >
               Start Admission Process
