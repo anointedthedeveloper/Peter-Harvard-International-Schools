@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
+import { Facebook, Instagram, Mail, Phone, MapPin } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -24,7 +24,6 @@ const Footer = () => {
               {[
                 { icon: Facebook, href: 'https://www.facebook.com/peterharvardschools/' },
                 { icon: Instagram, href: 'https://www.instagram.com/peterharvard1/' },
-                { icon: Linkedin, href: 'https://ng.linkedin.com/in/dr-peter-oyedotun-agunloye' },
               ].map(({ icon: Icon, href }, i) => (
                 <a
                   key={i}
