@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ChevronRight, Award, Users, BookOpen, Globe } from 'lucide-react';
+import { ChevronRight, Award, Users, BookOpen, Globe, Calendar } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 const fadeUp = {
   initial: { opacity: 0, y: 24 },
@@ -42,6 +43,64 @@ const StatCard = ({ value, suffix, label }) => {
       <p className="text-4xl md:text-5xl font-extrabold text-white tabular-nums">{count}{suffix}</p>
       <p className="text-white/60 mt-2 text-sm font-medium">{label}</p>
     </div>
+  );
+};
+
+const BlogSection = () => {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    supabase.from('blog_posts').select('*').order('created_at', { ascending: false }).limit(3)
+      .then(({ data }) => { if (data) setPosts(data); setLoading(false); });
+  }, []);
+
+  if (!loading && posts.length === 0) return null;
+
+  return (
+    <section className="py-20 md:py-28 bg-gray-50 dark:bg-gray-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div {...fadeUp} className="flex justify-between items-end mb-12">
+          <div>
+            <p className="text-secondary text-xs font-bold uppercase tracking-widest mb-2">Stay Updated</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">Latest News &amp; Updates</h2>
+          </div>
+        </motion.div>
+
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {[1,2,3].map(i => <div key={i} className="h-64 bg-gray-200 dark:bg-gray-700 rounded-2xl animate-pulse" />)}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {posts.map((post, i) => (
+              <motion.div
+                key={post.id}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ delay: i * 0.08, duration: 0.45 }}
+                whileHover={{ y: -5, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
+                className="bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800 hover:border-secondary/30 hover:shadow-lg transition-shadow group cursor-default"
+              >
+                {post.cover_url
+                  ? <img src={post.cover_url} alt={post.title} className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-500" />
+                  : <div className="w-full h-44 bg-gradient-to-br from-secondary/10 to-red-100 dark:from-secondary/20 dark:to-gray-800 flex items-center justify-center"><BookOpen size={36} className="text-secondary/40" /></div>
+                }
+                <div className="p-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs bg-secondary/10 text-secondary font-bold px-2.5 py-1 rounded-full">{post.category}</span>
+                    <span className="text-xs text-gray-400 flex items-center gap-1"><Calendar size={11} />{new Date(post.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</span>
+                  </div>
+                  <h3 className="font-bold text-gray-900 dark:text-white mb-2 leading-snug line-clamp-2">{post.title}</h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed">{post.excerpt}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
   );
 };
 
@@ -214,17 +273,18 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ── Campus Life Gallery ── */}
+      {/* ── School Life ── */}
       <section className="py-20 md:py-28 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4">
           <motion.div {...fadeUp} className="flex justify-between items-end mb-10">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">Campus Life</h2>
-              <p className="text-gray-500 dark:text-gray-400 text-sm">Experience the vibrant life at Peter Harvard.</p>
+              <p className="text-secondary text-xs font-bold uppercase tracking-widest mb-2">Our Environment</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">School Life at PHIS</h2>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">A glimpse into the vibrant world of Peter Harvard.</p>
             </div>
             <motion.div whileHover={{ x: 3 }}>
               <Link to="/gallery" className="text-secondary font-bold text-sm hidden sm:flex items-center gap-1 hover:gap-2 transition-all">
-                View All <ChevronRight size={16} />
+                View Gallery <ChevronRight size={16} />
               </Link>
             </motion.div>
           </motion.div>
@@ -253,6 +313,9 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* ── Blog / Latest News ── */}
+      <BlogSection />
 
       {/* ── Stats ── */}
       <section className="py-16 md:py-20 bg-gray-900 relative overflow-hidden">

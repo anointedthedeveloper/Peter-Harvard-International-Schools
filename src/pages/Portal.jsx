@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, UserCircle, ShieldCheck, Eye, EyeOff, ArrowRight, LogIn, ChevronLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { Lock, UserCircle, ShieldCheck, ArrowRight } from 'lucide-react';
 
 const inputClass = 'w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary dark:text-white text-sm transition-all';
 
@@ -116,17 +117,25 @@ const LoginForm = ({ type, onBack }) => {
 };
 
 const portals = [
-  { key: 'student', icon: UserCircle, title: 'Student & Parent', desc: 'Access academic records, attendance, assignments, and results.' },
-  { key: 'admin', icon: ShieldCheck, title: 'Admin & Staff', desc: 'Manage school operations, student data, and staff information.' },
+  { key: 'student', icon: UserCircle, title: 'Student & Parent', desc: 'Access academic records, attendance, assignments, and results.', href: 'https://portal.peterharvardschools.com' },
+  { key: 'admin', icon: ShieldCheck, title: 'Admin & Staff', desc: 'Manage school operations, student data, and staff information.', href: '/login' },
 ];
 
 const Portal = () => {
-  const [activePortal, setActivePortal] = useState(null);
+  const navigate = useNavigate();
+
+  const handlePortalClick = (portal) => {
+    if (portal.key === 'admin') {
+      navigate('/login');
+    } else {
+      window.open(portal.href, '_blank', 'noopener,noreferrer');
+    }
+  };
 
   return (
     <div className="pt-20 min-h-screen flex">
 
-      {/* Left — decorative panel (hidden on mobile) */}
+      {/* Left — decorative panel */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
         <img
           src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=70"
@@ -136,7 +145,6 @@ const Portal = () => {
         />
         <div className="absolute inset-0 bg-gradient-to-br from-gray-900/90 via-gray-900/70 to-secondary/60" />
         <div className="relative z-10 flex flex-col justify-between p-12 w-full">
-          {/* Logo */}
           <div className="flex items-center gap-3">
             <img src="/assets/Badge.jpg" alt="PHIS" className="w-12 h-12 rounded-xl object-cover shadow-lg" />
             <div>
@@ -144,8 +152,6 @@ const Portal = () => {
               <p className="text-white/60 text-xs uppercase tracking-widest">Int'l Schools</p>
             </div>
           </div>
-
-          {/* Centre quote */}
           <div>
             <div className="w-12 h-1 bg-secondary rounded-full mb-6" />
             <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight mb-4">
@@ -155,23 +161,17 @@ const Portal = () => {
               Access your academic records, results, attendance, and school resources — all in one secure place.
             </p>
           </div>
-
-          {/* Security badges */}
           <div className="flex items-center gap-4 text-white/50 text-xs">
             <span className="flex items-center gap-1.5"><Lock size={11} className="text-green-400" /> SSL Secured</span>
-            <span>·</span>
-            <span>2FA Protected</span>
-            <span>·</span>
-            <span>Data Encrypted</span>
+            <span>·</span><span>2FA Protected</span>
+            <span>·</span><span>Data Encrypted</span>
           </div>
         </div>
       </div>
 
-      {/* Right — login panel */}
+      {/* Right — portal selection */}
       <div className="w-full lg:w-1/2 flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-6 py-12">
         <div className="w-full max-w-md">
-
-          {/* Mobile logo */}
           <div className="flex lg:hidden items-center gap-3 mb-8">
             <img src="/assets/Badge.jpg" alt="PHIS" className="w-10 h-10 rounded-xl object-cover shadow" />
             <div>
@@ -180,56 +180,41 @@ const Portal = () => {
             </div>
           </div>
 
-          <AnimatePresence mode="wait">
-            {!activePortal ? (
-              <motion.div
-                key="selection"
-                initial={{ opacity: 0, y: 20 }}
+          <div className="mb-8">
+            <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-1">Welcome Back</h1>
+            <p className="text-sm text-gray-400">Select your portal to continue</p>
+          </div>
+
+          <div className="space-y-4">
+            {portals.map(({ key, icon: Icon, title, desc }, i) => (
+              <motion.button
+                key={key}
+                onClick={() => handlePortalClick(portals[i])}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3, ease: 'easeOut' }}
+                transition={{ delay: i * 0.08, duration: 0.35 }}
+                whileHover={{ scale: 1.02, transition: { type: 'spring', stiffness: 400, damping: 20 } }}
+                whileTap={{ scale: 0.98 }}
+                className="w-full flex items-center gap-4 p-5 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 hover:border-secondary/50 hover:shadow-lg transition-shadow text-left group"
               >
-                <div className="mb-8">
-                  <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-1">Welcome Back</h1>
-                  <p className="text-sm text-gray-400">Select your portal to continue</p>
+                <div className="w-12 h-12 bg-secondary/10 text-secondary rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-secondary group-hover:text-white transition-all duration-300">
+                  <Icon size={24} />
                 </div>
-
-                <div className="space-y-4">
-                  {portals.map(({ key, icon: Icon, title, desc }, i) => (
-                    <motion.button
-                      key={key}
-                      onClick={() => setActivePortal(key)}
-                      initial={{ opacity: 0, y: 16 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.08, duration: 0.35 }}
-                      whileHover={{ scale: 1.02, transition: { type: 'spring', stiffness: 400, damping: 20 } }}
-                      whileTap={{ scale: 0.98 }}
-                      className="w-full flex items-center gap-4 p-5 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 hover:border-secondary/50 hover:shadow-lg transition-shadow text-left group"
-                    >
-                      <div className="w-12 h-12 bg-secondary/10 text-secondary rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-secondary group-hover:text-white transition-all duration-300">
-                        <Icon size={24} />
-                      </div>
-                      <div className="flex-1">
-                        <p className="font-bold text-gray-900 dark:text-white text-sm">{title}</p>
-                        <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">{desc}</p>
-                      </div>
-                      <ArrowRight size={18} className="text-gray-300 group-hover:text-secondary group-hover:translate-x-1 transition-all flex-shrink-0" />
-                    </motion.button>
-                  ))}
+                <div className="flex-1">
+                  <p className="font-bold text-gray-900 dark:text-white text-sm">{title}</p>
+                  <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">{desc}</p>
                 </div>
+                <ArrowRight size={18} className="text-gray-300 group-hover:text-secondary group-hover:translate-x-1 transition-all flex-shrink-0" />
+              </motion.button>
+            ))}
+          </div>
 
-                <p className="text-xs text-center text-gray-400 mt-8">
-                  Having trouble? Contact{' '}
-                  <a href="mailto:info@phis.edu" className="text-secondary hover:underline font-semibold">info@phis.edu</a>
-                </p>
-              </motion.div>
-            ) : (
-              <LoginForm type={activePortal} onBack={() => setActivePortal(null)} />
-            )}
-          </AnimatePresence>
+          <p className="text-xs text-center text-gray-400 mt-8">
+            Having trouble? Contact{' '}
+            <a href="mailto:peterharvardschools@yahoo.com" className="text-secondary hover:underline font-semibold">peterharvardschools@yahoo.com</a>
+          </p>
         </div>
       </div>
-
     </div>
   );
 };

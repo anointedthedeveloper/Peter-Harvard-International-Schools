@@ -13,8 +13,12 @@ import Contact from './pages/Contact';
 import Portal from './pages/Portal';
 import Developer from './pages/Developer';
 import Admission from './pages/Admission';
+import AdminLogin from './pages/AdminLogin';
+import Dashboard from './pages/Dashboard';
+import { AuthProvider } from './lib/auth';
 
-// Scroll to top on every route change
+const HIDDEN_ROUTES = ['/login', '/dashboard'];
+
 const RouteScrollReset = () => {
   const location = useLocation();
   useEffect(() => {
@@ -25,23 +29,36 @@ const RouteScrollReset = () => {
 
 const AnimatedRoutes = () => {
   const location = useLocation();
+  const hideChrome = HIDDEN_ROUTES.includes(location.pathname);
+
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<PageTransition><Home /></PageTransition>} />
-        <Route path="/about" element={<PageTransition><About /></PageTransition>} />
-        <Route path="/gallery" element={<PageTransition><Gallery /></PageTransition>} />
-        <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
-        <Route path="/portal" element={<PageTransition><Portal /></PageTransition>} />
-        <Route path="/developer" element={<PageTransition><Developer /></PageTransition>} />
-        <Route path="/admission" element={<PageTransition><Admission /></PageTransition>} />
-      </Routes>
-    </AnimatePresence>
+    <>
+      {!hideChrome && <Navbar darkMode={window.__darkMode} setDarkMode={window.__setDarkMode} />}
+      <RouteScrollReset />
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+          <Route path="/about" element={<PageTransition><About /></PageTransition>} />
+          <Route path="/gallery" element={<PageTransition><Gallery /></PageTransition>} />
+          <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
+          <Route path="/portal" element={<PageTransition><Portal /></PageTransition>} />
+          <Route path="/developer" element={<PageTransition><Developer /></PageTransition>} />
+          <Route path="/admission" element={<PageTransition><Admission /></PageTransition>} />
+          <Route path="/login" element={<AdminLogin />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Routes>
+      </AnimatePresence>
+      {!hideChrome && <Footer />}
+    </>
   );
 };
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
+
+  // Expose to AnimatedRoutes via window (avoids prop drilling through router)
+  window.__darkMode = darkMode;
+  window.__setDarkMode = setDarkMode;
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode);
@@ -49,18 +66,17 @@ function App() {
   }, [darkMode]);
 
   return (
-    <Router>
-      <div className="min-h-screen flex flex-col">
-        <PageLoader />
-        <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
-        <RouteScrollReset />
-        <main className="flex-grow">
-          <AnimatedRoutes />
-        </main>
-        <Footer />
-        <ScrollToTop />
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <div className="min-h-screen flex flex-col">
+          <PageLoader />
+          <main className="flex-grow">
+            <AnimatedRoutes />
+          </main>
+          <ScrollToTop />
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 
