@@ -3,27 +3,46 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply antialiased font-sans text-gray-900 bg-white dark:bg-gray-900 dark:text-gray-100;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Respect reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  img {
+    @apply select-none;
   }
 }
 
-.transparent-navbar {
-  @apply bg-transparent;
+@layer utilities {
+  .gpu {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
 }
 
-.solid-navbar {
-  @apply bg-white dark:bg-gray-900 shadow-md;
-}
-
+/* Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
-
 ::-webkit-scrollbar-track {
   @apply bg-gray-100 dark:bg-gray-800;
 }
-
 ::-webkit-scrollbar-thumb {
-  @apply bg-secondary/50 hover:bg-secondary rounded;
+  @apply bg-secondary/40 hover:bg-secondary rounded-full;
+  transition: background 0.2s;
 }

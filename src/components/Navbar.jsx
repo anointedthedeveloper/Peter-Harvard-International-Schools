@@ -1,20 +1,22 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Sun, Moon } from 'lucide-react';
+import { Menu, X, Sun, Moon, ChevronRight } from 'lucide-react';
 
 const Navbar = ({ darkMode, setDarkMode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+  const isHome = location.pathname === '/';
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
+    const handleScroll = () => setIsScrolled(window.scrollY > 60);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => { setIsOpen(false); }, [location.pathname]);
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -23,106 +25,209 @@ const Navbar = ({ darkMode, setDarkMode }) => {
     { name: 'Contact Us', path: '/contact' },
   ];
 
+  const isActive = (path) => location.pathname === path;
+
+  // Transparent only on home page before scroll
+  const isTransparent = isHome && !isScrolled;
+
   return (
-    <nav
-      className={`fixed w-full z-50 transition-all duration-300 ${
-        isScrolled ? 'solid-navbar py-4' : 'transparent-navbar py-6'
-      }`}
-    >
+    <nav className={`fixed w-full z-50 transition-all duration-500 ${
+      isTransparent
+        ? 'py-5 bg-transparent'
+        : 'py-3 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg border-b border-gray-100/50 dark:border-gray-800/50'
+    }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
+
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="bg-white p-1.5 rounded-lg shadow-md">
-              <img src="/assets/Badge.jpg" alt="PHIS Logo" className="w-14 h-14 object-contain" />
+          <Link to="/" className="flex items-center gap-3 group">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+              className={`rounded-xl overflow-hidden shadow-md transition-all duration-300 ${isTransparent ? 'w-14 h-14' : 'w-11 h-11'}`}
+            >
+              <img src="/assets/Badge.jpg" alt="PHIS Logo" className="w-full h-full object-cover" />
+            </motion.div>
+            <div className="flex flex-col leading-tight">
+              <span className={`font-extrabold tracking-tight transition-all duration-300 ${
+                isTransparent ? 'text-xl text-white' : 'text-base text-secondary dark:text-white'
+              }`}>
+                Peter Harvard
+              </span>
+              <span className={`text-xs font-semibold uppercase tracking-widest transition-all duration-300 ${
+                isTransparent ? 'text-white/70' : 'text-gray-400 dark:text-gray-500'
+              }`}>
+                Int'l Schools
+              </span>
             </div>
-            <span className={`font-bold text-2xl tracking-tighter ${
-              isScrolled ? 'text-secondary dark:text-white' : 'text-white'
-            }`}>
-              PHIS
-            </span>
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 to={link.path}
-                className={`text-sm font-medium transition-colors hover:text-secondary ${
-                  isScrolled 
-                    ? (location.pathname === link.path ? 'text-secondary' : 'text-gray-600 dark:text-gray-300')
-                    : 'text-white'
+                className={`relative px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 group ${
+                  isTransparent
+                    ? 'text-white/90 hover:text-white hover:bg-white/10'
+                    : isActive(link.path)
+                      ? 'text-secondary'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-secondary dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800'
                 }`}
               >
                 {link.name}
+                {/* Active underline */}
+                {isActive(link.path) && (
+                  <motion.span
+                    layoutId="nav-pill"
+                    className={`absolute bottom-0.5 left-3 right-3 h-0.5 rounded-full ${isTransparent ? 'bg-white' : 'bg-secondary'}`}
+                    transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                  />
+                )}
+                {/* Hover underline for non-active */}
+                {!isActive(link.path) && (
+                  <span className={`absolute bottom-0.5 left-3 right-3 h-0.5 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left ${
+                    isTransparent ? 'bg-white/50' : 'bg-secondary/40'
+                  }`} />
+                )}
               </Link>
             ))}
-            
-            <Link
-              to="/portal"
-              className="bg-secondary hover:bg-red-700 text-white px-6 py-2 rounded-full font-semibold transition-all transform hover:scale-105"
-            >
-              Portal
-            </Link>
 
-            <button
+            <div className={`w-px h-5 mx-2 ${isTransparent ? 'bg-white/20' : 'bg-gray-200 dark:bg-gray-700'}`} />
+
+            <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+              <Link
+                to="/portal"
+                className={`flex items-center gap-1.5 px-5 py-2 rounded-full text-sm font-bold transition-all shadow-md ${
+                  isActive('/portal')
+                    ? 'bg-red-700 text-white shadow-red-500/30'
+                    : 'bg-secondary hover:bg-red-700 text-white shadow-red-500/20 hover:shadow-red-500/40'
+                }`}
+              >
+                Portal <ChevronRight size={14} />
+              </Link>
+            </motion.div>
+
+            <motion.button
+              whileTap={{ scale: 0.9 }}
               onClick={() => setDarkMode(!darkMode)}
-              className={`p-2 rounded-full transition-colors ${
-                isScrolled ? 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300' : 'bg-white/20 text-white'
+              className={`ml-1 p-2.5 rounded-full transition-all duration-200 ${
+                isTransparent
+                  ? 'bg-white/10 hover:bg-white/20 text-white'
+                  : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
+              aria-label="Toggle dark mode"
             >
-              {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-            </button>
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.span
+                  key={darkMode ? 'sun' : 'moon'}
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="block"
+                >
+                  {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+                </motion.span>
+              </AnimatePresence>
+            </motion.button>
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center space-x-4">
-            <button
+          {/* Mobile Controls */}
+          <div className="md:hidden flex items-center gap-1">
+            <motion.button
+              whileTap={{ scale: 0.9 }}
               onClick={() => setDarkMode(!darkMode)}
-              className={`p-2 rounded-full ${
-                isScrolled ? 'text-gray-600 dark:text-gray-300' : 'text-white'
+              className={`p-2 rounded-full transition-colors ${
+                isTransparent ? 'text-white hover:bg-white/10' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
               }`}
             >
               {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              whileTap={{ scale: 0.9 }}
               onClick={() => setIsOpen(!isOpen)}
-              className={`${isScrolled ? 'text-gray-600 dark:text-gray-300' : 'text-white'}`}
+              className={`p-2 rounded-lg transition-colors ${
+                isTransparent
+                  ? 'text-white hover:bg-white/10'
+                  : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800'
+              }`}
             >
-              {isOpen ? <X size={28} /> : <Menu size={28} />}
-            </button>
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.span
+                  key={isOpen ? 'x' : 'menu'}
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="block"
+                >
+                  {isOpen ? <X size={24} /> : <Menu size={24} />}
+                </motion.span>
+              </AnimatePresence>
+            </motion.button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Nav Menu */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white dark:bg-gray-900 border-t dark:border-gray-800"
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            className="md:hidden overflow-hidden bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 shadow-2xl"
           >
-            <div className="px-4 pt-2 pb-6 space-y-1">
-              {navLinks.map((link) => (
-                <Link
+            {/* Logo strip */}
+            <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+              <img src="/assets/Badge.jpg" alt="PHIS" className="w-10 h-10 rounded-lg object-cover shadow" />
+              <div>
+                <p className="font-extrabold text-gray-900 dark:text-white text-sm leading-tight">Peter Harvard Int'l Schools</p>
+                <p className="text-xs text-gray-400 uppercase tracking-widest">Kubwa, Abuja</p>
+              </div>
+            </div>
+
+            <div className="px-4 py-3 space-y-1">
+              {navLinks.map((link, i) => (
+                <motion.div
                   key={link.name}
-                  to={link.path}
-                  onClick={() => setIsOpen(false)}
-                  className="block px-3 py-4 text-base font-medium text-gray-700 dark:text-gray-200 hover:text-secondary border-b dark:border-gray-800"
+                  initial={{ opacity: 0, x: -16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
                 >
-                  {link.name}
-                </Link>
+                  <Link
+                    to={link.path}
+                    className={`flex items-center justify-between px-4 py-3.5 rounded-xl text-sm font-semibold transition-all ${
+                      isActive(link.path)
+                        ? 'bg-secondary/10 text-secondary border border-secondary/20'
+                        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 border border-transparent'
+                    }`}
+                  >
+                    {link.name}
+                    {isActive(link.path)
+                      ? <span className="w-2 h-2 rounded-full bg-secondary" />
+                      : <ChevronRight size={14} className="text-gray-400" />
+                    }
+                  </Link>
+                </motion.div>
               ))}
-              <Link
-                to="/portal"
-                onClick={() => setIsOpen(false)}
-                className="block w-full text-center mt-4 bg-secondary text-white px-6 py-3 rounded-lg font-bold"
+
+              <motion.div
+                initial={{ opacity: 0, x: -16 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: navLinks.length * 0.05 }}
+                className="pt-2"
               >
-                Portal
-              </Link>
+                <Link
+                  to="/portal"
+                  className="flex items-center justify-center gap-2 w-full bg-secondary hover:bg-red-700 text-white px-6 py-3.5 rounded-xl font-bold transition-colors shadow-lg shadow-red-500/20"
+                >
+                  Student / Staff Portal <ChevronRight size={16} />
+                </Link>
+              </motion.div>
             </div>
           </motion.div>
         )}

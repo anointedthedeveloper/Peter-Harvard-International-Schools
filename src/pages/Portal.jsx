@@ -1,94 +1,235 @@
-import { motion } from 'framer-motion';
-import { User, ShieldCheck, ArrowRight, Lock, UserCircle, Settings } from 'lucide-react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Lock, UserCircle, ShieldCheck, Eye, EyeOff, ArrowRight, LogIn, ChevronLeft } from 'lucide-react';
+
+const inputClass = 'w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary dark:text-white text-sm transition-all';
+
+const LoginForm = ({ type, onBack }) => {
+  const [form, setForm] = useState({ id: '', password: '' });
+  const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const isAdmin = type === 'admin';
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setError('Portal is currently under maintenance. Please try again later.');
+    }, 1500);
+  };
+
+  return (
+    <motion.div
+      key="form"
+      initial={{ opacity: 0, x: 30 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -30 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+      className="w-full"
+    >
+      <button
+        onClick={onBack}
+        className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-secondary transition-colors mb-6 group"
+      >
+        <ChevronLeft size={16} className="group-hover:-translate-x-0.5 transition-transform" />
+        Back to portal selection
+      </button>
+
+      <div className="flex items-center gap-3 mb-7">
+        <div className="w-11 h-11 bg-secondary/10 text-secondary rounded-xl flex items-center justify-center">
+          {isAdmin ? <ShieldCheck size={22} /> : <UserCircle size={22} />}
+        </div>
+        <div>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+            {isAdmin ? 'Admin & Staff Login' : 'Student & Parent Login'}
+          </h2>
+          <p className="text-xs text-gray-400">Enter your credentials to continue</p>
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+            {isAdmin ? 'Staff ID' : 'Student / Parent ID'}
+          </label>
+          <input
+            type="text"
+            required
+            value={form.id}
+            onChange={e => setForm({ ...form, id: e.target.value })}
+            placeholder={isAdmin ? 'e.g. STAFF-001' : 'e.g. STU-2024-001'}
+            className={inputClass}
+          />
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Password</label>
+          <div className="relative">
+            <input
+              type={showPass ? 'text' : 'password'}
+              required
+              value={form.password}
+              onChange={e => setForm({ ...form, password: e.target.value })}
+              placeholder="Enter your password"
+              className={`${inputClass} pr-12`}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPass(!showPass)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-secondary transition-colors"
+            >
+              {showPass ? <EyeOff size={17} /> : <Eye size={17} />}
+            </button>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between text-xs">
+          <label className="flex items-center gap-2 text-gray-500 dark:text-gray-400 cursor-pointer">
+            <input type="checkbox" className="accent-secondary" /> Remember me
+          </label>
+          <span className="text-secondary hover:underline cursor-pointer font-semibold">Forgot password?</span>
+        </div>
+
+        {error && (
+          <p className="text-xs text-red-500 bg-red-50 dark:bg-red-900/20 px-4 py-3 rounded-xl">{error}</p>
+        )}
+
+        <motion.button
+          type="submit"
+          disabled={loading}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="w-full bg-secondary hover:bg-red-700 disabled:opacity-60 text-white font-bold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg shadow-red-500/20 mt-2"
+        >
+          {loading
+            ? <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            : <><LogIn size={17} /> Sign In</>
+          }
+        </motion.button>
+      </form>
+    </motion.div>
+  );
+};
+
+const portals = [
+  { key: 'student', icon: UserCircle, title: 'Student & Parent', desc: 'Access academic records, attendance, assignments, and results.' },
+  { key: 'admin', icon: ShieldCheck, title: 'Admin & Staff', desc: 'Manage school operations, student data, and staff information.' },
+];
 
 const Portal = () => {
+  const [activePortal, setActivePortal] = useState(null);
+
   return (
-    <div className="pt-20 min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors flex items-center justify-center p-4">
-      <div className="max-w-4xl w-full">
-        <div className="text-center mb-16">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="w-20 h-20 bg-secondary rounded-3xl mx-auto flex items-center justify-center text-white mb-6 shadow-2xl"
-          >
-            <Lock size={40} />
-          </motion.div>
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight"
-          >
-            School Portal Access
-          </motion.h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400">
-            Welcome to the PHIS digital ecosystem. Please select your login portal.
-          </p>
-        </div>
+    <div className="pt-20 min-h-screen flex">
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Student/Parent Login */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            whileHover={{ y: -10 }}
-            className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-2xl border border-gray-100 dark:border-gray-800 flex flex-col items-center text-center group"
-          >
-            <div className="w-16 h-16 bg-red-100 dark:bg-red-900/40 text-secondary rounded-2xl flex items-center justify-center mb-8 group-hover:bg-secondary group-hover:text-white transition-all duration-300">
-              <UserCircle size={32} />
+      {/* Left — decorative panel (hidden on mobile) */}
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=70"
+          alt="PHIS Portal"
+          loading="eager"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900/90 via-gray-900/70 to-secondary/60" />
+        <div className="relative z-10 flex flex-col justify-between p-12 w-full">
+          {/* Logo */}
+          <div className="flex items-center gap-3">
+            <img src="/assets/Badge.jpg" alt="PHIS" className="w-12 h-12 rounded-xl object-cover shadow-lg" />
+            <div>
+              <p className="font-extrabold text-white text-lg leading-tight">Peter Harvard</p>
+              <p className="text-white/60 text-xs uppercase tracking-widest">Int'l Schools</p>
             </div>
-            <h3 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">Student & Parent</h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
-              Access your academic records, attendance, assignments, and results.
-            </p>
-            <button className="w-full bg-gray-900 dark:bg-gray-800 hover:bg-secondary text-white font-bold py-4 rounded-2xl transition-all flex items-center justify-center space-x-2 group-hover:shadow-xl group-hover:shadow-red-500/20">
-              <span>Student Login</span>
-              <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
-            </button>
-            <p className="mt-6 text-sm text-gray-500 hover:text-secondary cursor-pointer transition-colors">Forgot your credentials?</p>
-          </motion.div>
-
-          {/* Admin/Staff Login */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            whileHover={{ y: -10 }}
-            className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-2xl border border-gray-100 dark:border-gray-800 flex flex-col items-center text-center group"
-          >
-            <div className="w-16 h-16 bg-red-100 dark:bg-red-900/40 text-secondary rounded-2xl flex items-center justify-center mb-8 group-hover:bg-secondary group-hover:text-white transition-all duration-300">
-              <ShieldCheck size={32} />
-            </div>
-            <h3 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">Admin & Staff</h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
-              Manage school operations, student data, and staff information.
-            </p>
-            <button className="w-full bg-secondary hover:bg-red-700 text-white font-bold py-4 rounded-2xl transition-all flex items-center justify-center space-x-2 shadow-xl shadow-red-500/20">
-              <span>Admin Login</span>
-              <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
-            </button>
-            <p className="mt-6 text-sm text-gray-500 hover:text-secondary cursor-pointer transition-colors flex items-center space-x-1">
-              <Settings size={14} />
-              <span>Staff Support Portal</span>
-            </p>
-          </motion.div>
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="mt-16 text-center text-gray-500 dark:text-gray-500 text-sm"
-        >
-          <p>Security Warning: Always ensure you are on the official PHIS domain before entering your credentials.</p>
-          <div className="flex items-center justify-center space-x-4 mt-4">
-            <span className="flex items-center space-x-1">
-              <Lock size={12} className="text-green-500" />
-              <span>SSL Secured</span>
-            </span>
-            <span>&bull;</span>
-            <span>2FA Protection</span>
           </div>
-        </motion.div>
+
+          {/* Centre quote */}
+          <div>
+            <div className="w-12 h-1 bg-secondary rounded-full mb-6" />
+            <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight mb-4">
+              Your Gateway to<br />Academic Excellence
+            </h2>
+            <p className="text-white/60 text-sm leading-relaxed max-w-sm">
+              Access your academic records, results, attendance, and school resources — all in one secure place.
+            </p>
+          </div>
+
+          {/* Security badges */}
+          <div className="flex items-center gap-4 text-white/50 text-xs">
+            <span className="flex items-center gap-1.5"><Lock size={11} className="text-green-400" /> SSL Secured</span>
+            <span>·</span>
+            <span>2FA Protected</span>
+            <span>·</span>
+            <span>Data Encrypted</span>
+          </div>
+        </div>
       </div>
+
+      {/* Right — login panel */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-6 py-12">
+        <div className="w-full max-w-md">
+
+          {/* Mobile logo */}
+          <div className="flex lg:hidden items-center gap-3 mb-8">
+            <img src="/assets/Badge.jpg" alt="PHIS" className="w-10 h-10 rounded-xl object-cover shadow" />
+            <div>
+              <p className="font-extrabold text-gray-900 dark:text-white text-base leading-tight">Peter Harvard Int'l Schools</p>
+              <p className="text-gray-400 text-xs uppercase tracking-widest">Portal Access</p>
+            </div>
+          </div>
+
+          <AnimatePresence mode="wait">
+            {!activePortal ? (
+              <motion.div
+                key="selection"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+              >
+                <div className="mb-8">
+                  <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-1">Welcome Back</h1>
+                  <p className="text-sm text-gray-400">Select your portal to continue</p>
+                </div>
+
+                <div className="space-y-4">
+                  {portals.map(({ key, icon: Icon, title, desc }, i) => (
+                    <motion.button
+                      key={key}
+                      onClick={() => setActivePortal(key)}
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.08, duration: 0.35 }}
+                      whileHover={{ scale: 1.02, transition: { type: 'spring', stiffness: 400, damping: 20 } }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full flex items-center gap-4 p-5 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 hover:border-secondary/50 hover:shadow-lg transition-shadow text-left group"
+                    >
+                      <div className="w-12 h-12 bg-secondary/10 text-secondary rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-secondary group-hover:text-white transition-all duration-300">
+                        <Icon size={24} />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-bold text-gray-900 dark:text-white text-sm">{title}</p>
+                        <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">{desc}</p>
+                      </div>
+                      <ArrowRight size={18} className="text-gray-300 group-hover:text-secondary group-hover:translate-x-1 transition-all flex-shrink-0" />
+                    </motion.button>
+                  ))}
+                </div>
+
+                <p className="text-xs text-center text-gray-400 mt-8">
+                  Having trouble? Contact{' '}
+                  <a href="mailto:info@phis.edu" className="text-secondary hover:underline font-semibold">info@phis.edu</a>
+                </p>
+              </motion.div>
+            ) : (
+              <LoginForm type={activePortal} onBack={() => setActivePortal(null)} />
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+
     </div>
   );
 };
