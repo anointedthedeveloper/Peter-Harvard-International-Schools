@@ -33,9 +33,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-secondary rounded-full flex items-center justify-center text-white font-bold text-xl">
-              P
-            </div>
+            <img src="/assets/Badge.jpg" alt="PHIS Logo" className="w-10 h-10 rounded-full object-cover" />
             <span className={`font-bold text-2xl tracking-tighter ${
               isScrolled ? 'text-secondary dark:text-white' : 'text-white'
             }`}>
