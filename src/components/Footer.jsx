@@ -46,6 +46,7 @@ const Footer = () => {
                 { label: 'Home', path: '/' },
                 { label: 'About Us', path: '/about' },
                 { label: 'Gallery', path: '/gallery' },
+                { label: 'Blog', path: '/blog' },
                 { label: 'Contact Us', path: '/contact' },
                 { label: 'Portal', path: '/portal' },
               ].map(({ label, path }) => (

@@ -1,27 +1,45 @@
-import { createContext, useContext, useState } from 'react';
-
-const ADMIN_PASSWORD = 'phis@admin2017';
+import { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from './supabase';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [authed, setAuthed] = useState(() => sessionStorage.getItem('phis_admin') === 'true');
+  const [authed, setAuthed] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const login = (password) => {
-    if (password === ADMIN_PASSWORD) {
-      sessionStorage.setItem('phis_admin', 'true');
-      setAuthed(true);
-      return true;
-    }
-    return false;
+  useEffect(() => {
+    // Restore session on mount
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setAuthed(!!session);
+      setLoading(false);
+    });
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setAuthed(!!session);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const login = async (password) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email: 'admin@peterharvard.sch.ng',
+      password,
+    });
+    if (error) return false;
+    setAuthed(true);
+    return true;
   };
 
-  const logout = () => {
-    sessionStorage.removeItem('phis_admin');
+  const logout = async () => {
+    await supabase.auth.signOut();
     setAuthed(false);
   };
 
-  return <AuthContext.Provider value={{ authed, login, logout }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ authed, loading, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => useContext(AuthContext);

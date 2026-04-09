@@ -326,7 +326,7 @@ const Home = () => {
         <div className="max-w-5xl mx-auto px-4 relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <StatCard value={yearsRunning} suffix="+" label="Years of Excellence" />
-            <StatCard value={3200} suffix="+" label="Students Enrolled" />
+            <StatCard value={1000} suffix="+" label="Active Students" />
             <StatCard value={180} suffix="+" label="Expert Educators" />
             <StatCard value={98} suffix="%" label="University Placement" />
           </div>

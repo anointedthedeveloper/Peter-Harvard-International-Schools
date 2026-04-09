@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Phone, MapPin, Upload, ChevronRight, X, CheckCircle, BookOpen } from 'lucide-react';
+import { User, Phone, MapPin, Upload, ChevronRight, X, CheckCircle, BookOpen, Eye, Edit2 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 const inputClass = 'w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary transition-all dark:text-white text-sm';
 
@@ -12,6 +13,13 @@ const CLASSES = [
   'SSS 1', 'SSS 2', 'SSS 3',
 ];
 
+const Field = ({ label, value }) => (
+  <div>
+    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">{label}</p>
+    <p className="text-sm text-gray-800 dark:text-gray-200 mt-0.5 break-words">{value || '—'}</p>
+  </div>
+);
+
 const Admission = () => {
   const [form, setForm] = useState({
     studentName: '', dob: '', gender: '',
@@ -19,7 +27,7 @@ const Admission = () => {
     email: '', address: '', photo: null,
   });
   const [preview, setPreview] = useState(null);
-  const [submitted, setSubmitted] = useState(false);
+  const [step, setStep] = useState('form'); // 'form' | 'preview' | 'success'
   const [loading, setLoading] = useState(false);
   const fileRef = useRef(null);
 
@@ -38,20 +46,55 @@ const Admission = () => {
     fileRef.current.value = '';
   };
 
-  const handleSubmit = async (e) => {
+  const handlePreview = (e) => {
     e.preventDefault();
-    setLoading(true);
-
-    // TODO: replace with real API endpoint
-    // const data = new FormData();
-    // Object.entries(form).forEach(([k, v]) => data.append(k, v));
-    // await fetch('/api/admissions', { method: 'POST', body: data });
-
-    setTimeout(() => {
-      setLoading(false);
-      setSubmitted(true);
-    }, 1800);
+    setStep('preview');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      let photo_url = null;
+      let photo_path = null;
+      if (form.photo) {
+        const ext = form.photo.name.split('.').pop();
+        photo_path = `admissions/${Date.now()}.${ext}`;
+        const { error: upErr } = await supabase.storage.from('phis-media').upload(photo_path, form.photo);
+        if (upErr) throw upErr;
+        const { data: { publicUrl } } = supabase.storage.from('phis-media').getPublicUrl(photo_path);
+        photo_url = publicUrl;
+      }
+      const { error } = await supabase.from('admissions').insert({
+        student_name: form.studentName,
+        dob: form.dob,
+        gender: form.gender,
+        class_applying: form.classApplying,
+        parent_name: form.parentName,
+        phone: form.phone,
+        email: form.email || null,
+        address: form.address,
+        photo_url,
+        photo_path,
+      });
+      if (error) throw error;
+      setStep('success');
+    } catch (err) {
+      alert(err.message || 'Submission failed. Please try again.');
+      setStep('form');
+    }
+    setLoading(false);
+  };
+
+  const FormHeader = () => (
+    <div className="bg-secondary px-8 py-6 flex items-center gap-4">
+      <img src="/assets/Badge.jpg" alt="PHIS Logo" className="w-14 h-14 rounded-xl object-cover border-2 border-white/30 shadow-lg flex-shrink-0" />
+      <div>
+        <h2 className="text-xl font-extrabold text-white">Admission Application Form</h2>
+        <p className="text-white/70 text-xs mt-0.5">Peter Harvard INT'L School — {new Date().getFullYear()} Session</p>
+      </div>
+    </div>
+  );
 
   return (
     <div className="pt-20 min-h-screen bg-gray-50 dark:bg-gray-950">
@@ -82,11 +125,13 @@ const Admission = () => {
         </motion.div>
       </section>
 
-      {/* Form */}
+      {/* Form / Preview / Success */}
       <section className="py-16 md:py-20">
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <AnimatePresence mode="wait">
-            {submitted ? (
+
+            {/* ── SUCCESS ── */}
+            {step === 'success' && (
               <motion.div
                 key="success"
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -96,6 +141,7 @@ const Admission = () => {
                 <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
                   <CheckCircle size={40} className="text-green-500" />
                 </div>
+                <img src="/assets/Badge.jpg" alt="PHIS" className="w-16 h-16 rounded-xl object-cover mx-auto mb-4 shadow-md" />
                 <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-3">Application Received!</h2>
                 <p className="text-gray-500 dark:text-gray-400 max-w-sm mx-auto leading-relaxed">
                   Thank you for applying to Peter Harvard INT'L School. We will review your application and reach out to you shortly.
@@ -104,26 +150,83 @@ const Admission = () => {
                   📞 For enquiries call: 08182277020 · 08033570685
                 </div>
               </motion.div>
-            ) : (
+            )}
+
+            {/* ── PREVIEW ── */}
+            {step === 'preview' && (
+              <motion.div
+                key="preview"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800 overflow-hidden"
+              >
+                <FormHeader />
+                <div className="p-8 space-y-6">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-extrabold text-gray-900 dark:text-white text-lg">Review Your Application</h3>
+                    <span className="text-xs bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 font-bold px-3 py-1 rounded-full">Preview</span>
+                  </div>
+
+                  {/* Photo + basic info */}
+                  <div className="flex gap-5 items-start p-4 bg-gray-50 dark:bg-gray-800 rounded-2xl">
+                    {preview
+                      ? <img src={preview} alt="Passport" className="w-24 h-24 rounded-xl object-cover border-4 border-secondary/20 flex-shrink-0 shadow" />
+                      : <div className="w-24 h-24 rounded-xl bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0"><User size={32} className="text-gray-400" /></div>
+                    }
+                    <div className="space-y-1">
+                      <p className="font-extrabold text-gray-900 dark:text-white text-lg">{form.studentName}</p>
+                      <p className="text-sm text-gray-500">{form.classApplying} · {form.gender}</p>
+                      <p className="text-sm text-gray-500">DOB: {form.dob}</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <Field label="Parent / Guardian" value={form.parentName} />
+                    <Field label="Phone" value={form.phone} />
+                    <Field label="Email" value={form.email} />
+                    <Field label="Class Applying" value={form.classApplying} />
+                    <div className="sm:col-span-2"><Field label="Home Address" value={form.address} /></div>
+                  </div>
+
+                  <div className="flex gap-3 pt-2">
+                    <button
+                      onClick={() => setStep('form')}
+                      className="flex items-center gap-2 px-5 py-3 rounded-xl border border-gray-200 dark:border-gray-700 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-secondary hover:text-secondary transition-colors"
+                    >
+                      <Edit2 size={15} /> Edit
+                    </button>
+                    <motion.button
+                      onClick={handleSubmit}
+                      disabled={loading}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="flex-1 bg-secondary hover:bg-red-700 disabled:opacity-60 text-white font-bold py-3 rounded-xl transition-colors shadow-lg shadow-red-500/20 flex items-center justify-center gap-2"
+                    >
+                      {loading
+                        ? <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        : <><CheckCircle size={17} /> Confirm & Submit</>
+                      }
+                    </motion.button>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* ── FORM ── */}
+            {step === 'form' && (
               <motion.div
                 key="form"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.4 }}
                 className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800 overflow-hidden"
               >
-                {/* Form header */}
-                <div className="bg-secondary px-8 py-6 flex items-center gap-4">
-                  <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                    <BookOpen size={24} className="text-white" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-extrabold text-white">Admission Application Form</h2>
-                    <p className="text-white/70 text-xs mt-0.5">Peter Harvard INT'L School — {new Date().getFullYear()} Session</p>
-                  </div>
-                </div>
+                <FormHeader />
 
-                <form onSubmit={handleSubmit} className="p-8 space-y-8">
+                <form onSubmit={handlePreview} className="p-8 space-y-8">
 
                   {/* Student Info */}
                   <div>
@@ -223,27 +326,23 @@ const Admission = () => {
                     <input ref={fileRef} type="file" accept="image/*" onChange={handlePhoto} className="hidden" />
                   </div>
 
-                  {/* Submit */}
+                  {/* Preview button */}
                   <motion.button
                     type="submit"
-                    disabled={loading}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full bg-secondary hover:bg-red-700 disabled:opacity-60 text-white font-bold py-4 rounded-xl transition-colors shadow-lg shadow-red-500/20 flex items-center justify-center gap-2 text-base"
+                    className="w-full bg-secondary hover:bg-red-700 text-white font-bold py-4 rounded-xl transition-colors shadow-lg shadow-red-500/20 flex items-center justify-center gap-2 text-base"
                   >
-                    {loading ? (
-                      <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    ) : (
-                      <> Submit Application <ChevronRight size={18} /> </>
-                    )}
+                    <Eye size={18} /> Preview Application <ChevronRight size={18} />
                   </motion.button>
 
                   <p className="text-xs text-center text-gray-400">
-                    By submitting, you agree that the information provided is accurate. Our admissions team will contact you within 2–3 working days.
+                    You'll be able to review your details before final submission.
                   </p>
                 </form>
               </motion.div>
             )}
+
           </AnimatePresence>
         </div>
       </section>

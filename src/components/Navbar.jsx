@@ -22,6 +22,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
     { name: 'Home', path: '/' },
     { name: 'About Us', path: '/about' },
     { name: 'Gallery', path: '/gallery' },
+    { name: 'Blog', path: '/blog' },
     { name: 'Contact Us', path: '/contact' },
   ];
 
@@ -44,9 +45,9 @@ const Navbar = ({ darkMode, setDarkMode }) => {
             <motion.div
               whileHover={{ scale: 1.05 }}
               transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-              className={`rounded-xl overflow-hidden shadow-md transition-all duration-300 ${isTransparent ? 'w-14 h-14' : 'w-11 h-11'}`}
+              className={`transition-all duration-300 ${isTransparent ? 'w-14 h-14' : 'w-11 h-11'}`}
             >
-              <img src="/assets/Badge.jpg" alt="PHIS Logo" className="w-full h-full object-cover" />
+              <img src="/assets/Badge.jpg" alt="PHIS Logo" className="w-full h-full object-cover rounded-xl" />
             </motion.div>
             <div className="flex flex-col leading-tight">
               <span className={`font-extrabold tracking-tight transition-all duration-300 ${

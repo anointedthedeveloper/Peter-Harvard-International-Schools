@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Lock, Eye, EyeOff, LogIn } from 'lucide-react';
+import { Eye, EyeOff, LogIn } from 'lucide-react';
 import { useAuth } from '../lib/auth';
 
 const AdminLogin = () => {
@@ -12,21 +12,18 @@ const AdminLogin = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
-    setTimeout(() => {
-      const ok = login(password);
-      setLoading(false);
-      if (ok) navigate('/dashboard');
-      else setError('Incorrect password. Please try again.');
-    }, 800);
+    const ok = await login(password);
+    setLoading(false);
+    if (ok) navigate('/dashboard');
+    else setError('Incorrect password. Please try again.');
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4">
-      {/* Background glow */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-secondary/10 rounded-full blur-3xl" />
       </div>
@@ -37,10 +34,9 @@ const AdminLogin = () => {
         transition={{ duration: 0.5, ease: 'easeOut' }}
         className="relative z-10 w-full max-w-sm"
       >
-        {/* Logo */}
         <div className="flex flex-col items-center mb-10">
-          <div className="w-16 h-16 bg-secondary rounded-2xl flex items-center justify-center shadow-2xl shadow-red-500/30 mb-5">
-            <Lock size={30} className="text-white" />
+          <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-2xl shadow-red-500/20 mb-5">
+            <img src="/assets/Badge.jpg" alt="PHIS" className="w-full h-full object-cover" />
           </div>
           <h1 className="text-2xl font-extrabold text-white tracking-tight">Admin Access</h1>
           <p className="text-gray-500 text-sm mt-1">Peter Harvard INT'L School</p>

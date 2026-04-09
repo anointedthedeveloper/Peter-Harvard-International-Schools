@@ -15,6 +15,8 @@ import Developer from './pages/Developer';
 import Admission from './pages/Admission';
 import AdminLogin from './pages/AdminLogin';
 import Dashboard from './pages/Dashboard';
+import Blog from './pages/Blog';
+import NotFound from './pages/NotFound';
 import { AuthProvider } from './lib/auth';
 
 const HIDDEN_ROUTES = ['/login', '/dashboard'];
@@ -44,8 +46,10 @@ const AnimatedRoutes = () => {
           <Route path="/portal" element={<PageTransition><Portal /></PageTransition>} />
           <Route path="/developer" element={<PageTransition><Developer /></PageTransition>} />
           <Route path="/admission" element={<PageTransition><Admission /></PageTransition>} />
+          <Route path="/blog" element={<PageTransition><Blog /></PageTransition>} />
           <Route path="/login" element={<AdminLogin />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
         </Routes>
       </AnimatePresence>
       {!hideChrome && <Footer />}
