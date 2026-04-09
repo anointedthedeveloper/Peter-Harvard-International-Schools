@@ -52,7 +52,11 @@ const BlogSection = () => {
 
   useEffect(() => {
     supabase.from('blog_posts').select('*').order('created_at', { ascending: false }).limit(3)
-      .then(({ data }) => { if (data) setPosts(data); setLoading(false); });
+      .then(({ data, error }) => {
+        if (data) setPosts(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, []);
 
   if (!loading && posts.length === 0) return null;
