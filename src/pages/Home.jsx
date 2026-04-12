@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ChevronRight, Award, Users, BookOpen, Globe, Calendar, ChevronLeft } from 'lucide-react';
 import { supabase } from '../lib/supabase';
@@ -201,44 +201,32 @@ const Home = () => {
         <div className="relative w-full max-w-7xl mx-auto px-4 flex flex-col items-center">
           
           {/* Carousel Container */}
-          <div className="relative w-full h-[300px] md:h-[500px] flex items-center justify-center mb-12">
-            <AnimatePresence initial={false}>
-              {heroSlides.map((slide, i) => {
-                const total = heroSlides.length;
-                let offset = (i - currentSlide + total) % total;
-                if (offset > total / 2) offset -= total;
-                
-                const absOffset = Math.abs(offset);
-                const isVisible = absOffset <= 2;
+          <div className="relative w-full flex items-center justify-center mb-12 overflow-hidden" style={{ height: '340px' }}>
+            {heroSlides.map((slide, i) => {
+              const total = heroSlides.length;
+              let offset = (i - currentSlide + total) % total;
+              if (offset > total / 2) offset -= total;
+              const absOffset = Math.abs(offset);
+              if (absOffset > 1) return null;
 
-                if (!isVisible) return null;
-
-                return (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{
-                      opacity: 1 - absOffset * 0.35,
-                      scale: 1 - absOffset * 0.18,
-                      x: `${offset * 65}%`,
-                      zIndex: total - absOffset,
-                    }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 260,
-                      damping: 26
-                    }}
-                    className="absolute w-[80%] md:w-[60%] lg:w-[50%] aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl"
-                  >
-                    <img
-                      src={slide.image}
-                      alt={slide.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
+              const isCenter = offset === 0;
+              return (
+                <motion.div
+                  key={i}
+                  animate={{
+                    x: `${offset * 72}%`,
+                    scale: isCenter ? 1 : 0.78,
+                    opacity: isCenter ? 1 : 0.55,
+                    zIndex: isCenter ? 10 : 5,
+                  }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                  onClick={() => !isCenter && setCurrentSlide(i)}
+                  className={`absolute w-[62%] md:w-[52%] lg:w-[44%] aspect-video rounded-[2rem] overflow-hidden shadow-2xl ${!isCenter ? 'cursor-pointer' : ''}`}
+                >
+                  <img src={slide.image} alt={slide.title} className="w-full h-full object-cover" />
+                </motion.div>
+              );
+            })}
           </div>
 
           {/* Text Content */}
