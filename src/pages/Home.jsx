@@ -6,7 +6,7 @@ import { supabase } from '../lib/supabase';
 
 const heroSlides = [
   {
-    image: 'assets/slideshow/hero1.png',
+    image: '/assets/slideshow/hero1.png',
     title: 'Peter Harvard',
     subtitle: 'International Schools',
     desc: 'Nurturing Excellence, Inspiring Innovation, and Building Global Leaders for Tomorrow.'
@@ -22,6 +22,18 @@ const heroSlides = [
     title: 'Holistic',
     subtitle: 'Student Development',
     desc: 'Fostering creativity, leadership, and character in a vibrant school community.'
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1920&q=80',
+    title: 'Modern',
+    subtitle: 'Learning Spaces',
+    desc: 'State-of-the-art facilities designed to inspire curiosity and collaboration.'
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=1920&q=80',
+    title: 'Global',
+    subtitle: 'Perspective',
+    desc: 'Preparing students for success in an increasingly interconnected world.'
   }
 ];
 
@@ -175,111 +187,139 @@ const Home = () => {
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
 
   return (
-    <div className="overflow-x-hidden">
+    <div className="overflow-x-hidden bg-white dark:bg-gray-950">
 
       {/* ── Hero Slideshow ── */}
-      <section className="relative h-screen flex items-center justify-center bg-gray-950 text-white overflow-hidden">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentSlide}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.2, ease: "easeInOut" }}
-            className="absolute inset-0 w-full h-full"
-          >
-            <motion.img
-              initial={{ scale: 1.1, opacity: 0 }}
-              animate={{ scale: 1, opacity: 0.5 }}
-              transition={{ duration: 1.5, ease: "easeOut" }}
-              src={heroSlides[currentSlide].image}
-              alt="School Campus"
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/80" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(0,0,0,0.6)_100%)]" />
-          </motion.div>
-        </AnimatePresence>
-
-        <div className="relative z-10 max-w-5xl mx-auto px-4 text-center">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentSlide}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -30 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-            >
-              <motion.span
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2, duration: 0.4 }}
-                className="inline-flex items-center gap-2 bg-secondary/10 border border-secondary/40 text-white text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] px-6 py-2.5 rounded-full mb-8 backdrop-blur-md"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse" />
-                Est. 2017 · Kubwa, Abuja
-              </motion.span>
-              <h1 className="text-5xl sm:text-6xl md:text-8xl font-black mb-6 tracking-tight leading-[1.05] drop-shadow-2xl">
-                {heroSlides[currentSlide].title} <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary via-red-500 to-orange-500">
-                  {heroSlides[currentSlide].subtitle}
-                </span>
-              </h1>
-              <p className="text-lg md:text-2xl mb-12 max-w-3xl mx-auto text-gray-200/90 leading-relaxed font-medium">
-                {heroSlides[currentSlide].desc}
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-                <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.98 }}>
-                  <Link
-                    to="/admission"
-                    className="group relative flex items-center gap-3 bg-secondary hover:bg-red-700 text-white px-10 py-5 rounded-2xl text-base font-bold transition-all shadow-2xl shadow-red-500/40"
-                  >
-                    Apply Now 
-                    <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </motion.div>
-                <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.98 }}>
-                  <Link
-                    to="/portal"
-                    className="flex items-center gap-3 bg-white/5 hover:bg-white/10 backdrop-blur-xl text-white border border-white/20 px-10 py-5 rounded-2xl text-base font-bold transition-all ring-1 ring-white/10 hover:ring-white/30"
-                  >
-                    Visit Portal
-                  </Link>
-                </motion.div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
+      <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden pt-20">
+        
+        {/* Background ambient glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 opacity-30 pointer-events-none">
+          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-secondary/20 rounded-full blur-[120px]" />
+          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/10 rounded-full blur-[120px]" />
         </div>
 
-        {/* Slide Controls */}
-        <div className="absolute inset-x-0 bottom-12 z-20 flex flex-col items-center gap-8">
-          <div className="flex items-center gap-4 px-4 py-2 bg-black/20 backdrop-blur-sm rounded-full border border-white/10">
-            <button onClick={prevSlide} className="p-2 hover:text-secondary transition-colors"><ChevronLeft size={20} /></button>
-            <div className="flex items-center gap-2.5">
-              {heroSlides.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrentSlide(i)}
-                  className={`h-1.5 transition-all duration-500 rounded-full ${i === currentSlide ? 'w-10 bg-secondary' : 'w-2.5 bg-white/30 hover:bg-white/50'}`}
-                />
-              ))}
-            </div>
-            <button onClick={nextSlide} className="p-2 hover:text-secondary transition-colors"><ChevronRight size={20} /></button>
+        <div className="relative w-full max-w-7xl mx-auto px-4 flex flex-col items-center">
+          
+          {/* Carousel Container */}
+          <div className="relative w-full h-[300px] md:h-[500px] flex items-center justify-center mb-12">
+            <AnimatePresence initial={false}>
+              {heroSlides.map((slide, i) => {
+                const total = heroSlides.length;
+                let offset = (i - currentSlide + total) % total;
+                if (offset > total / 2) offset -= total;
+                
+                const absOffset = Math.abs(offset);
+                const isVisible = absOffset <= 2;
+
+                if (!isVisible) return null;
+
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{
+                      opacity: 1 - absOffset * 0.35,
+                      scale: 1 - absOffset * 0.18,
+                      x: `${offset * 65}%`,
+                      zIndex: total - absOffset,
+                    }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 260,
+                      damping: 26
+                    }}
+                    className="absolute w-[80%] md:w-[60%] lg:w-[50%] aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl"
+                  >
+                    <img
+                      src={slide.image}
+                      alt={slide.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
           </div>
 
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ repeat: Infinity, duration: 2.5, ease: 'easeInOut' }}
-            className="hidden md:block"
-          >
-            <div className="w-[30px] h-[50px] border-2 border-white/20 rounded-full flex justify-center pt-2.5">
-              <motion.div 
-                animate={{ opacity: [0, 1, 0], y: [0, 15, 20] }}
-                transition={{ repeat: Infinity, duration: 2 }}
-                className="w-1.5 h-1.5 bg-secondary rounded-full" 
-              />
+          {/* Text Content */}
+          <div className="relative z-20 text-center max-w-4xl px-4">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentSlide}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+              >
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="inline-flex items-center gap-2 bg-secondary/10 border border-secondary/20 text-secondary dark:text-white text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] px-6 py-2 rounded-full mb-6"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse" />
+                  Est. 2017 · Kubwa, Abuja
+                </motion.span>
+                <h1 className="text-4xl sm:text-6xl md:text-7xl font-black mb-6 tracking-tight leading-[1.1] text-gray-900 dark:text-white">
+                  {heroSlides[currentSlide].title} <br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary via-red-500 to-orange-500">
+                    {heroSlides[currentSlide].subtitle}
+                  </span>
+                </h1>
+                <p className="text-base md:text-xl mb-10 max-w-2xl mx-auto text-gray-600 dark:text-gray-300 leading-relaxed font-medium">
+                  {heroSlides[currentSlide].desc}
+                </p>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                    <Link
+                      to="/admission"
+                      className="group flex items-center gap-3 bg-secondary hover:bg-red-700 text-white px-8 py-4 rounded-2xl text-base font-bold transition-all shadow-xl shadow-red-500/20"
+                    >
+                      Apply Now 
+                      <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                    <Link
+                      to="/portal"
+                      className="flex items-center gap-3 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-900 dark:text-white px-8 py-4 rounded-2xl text-base font-bold transition-all"
+                    >
+                      Visit Portal
+                    </Link>
+                  </motion.div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Slide Controls */}
+          <div className="mt-16 flex flex-col items-center gap-6">
+            <div className="flex items-center gap-6">
+              <button 
+                onClick={prevSlide} 
+                className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 dark:bg-white/5 text-gray-900 dark:text-white hover:bg-secondary hover:text-white transition-all shadow-sm"
+              >
+                <ChevronLeft size={24} />
+              </button>
+              
+              <div className="flex items-center gap-3">
+                {heroSlides.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentSlide(i)}
+                    className={`h-2.5 transition-all duration-500 rounded-full ${i === currentSlide ? 'w-10 bg-secondary' : 'w-2.5 bg-gray-200 dark:bg-white/10 hover:bg-secondary/40'}`}
+                  />
+                ))}
+              </div>
+
+              <button 
+                onClick={nextSlide} 
+                className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 dark:bg-white/5 text-gray-900 dark:text-white hover:bg-secondary hover:text-white transition-all shadow-sm"
+              >
+                <ChevronRight size={24} />
+              </button>
             </div>
-          </motion.div>
+          </div>
+
         </div>
       </section>
 
