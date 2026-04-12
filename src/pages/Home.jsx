@@ -6,7 +6,7 @@ import { supabase } from '../lib/supabase';
 
 const heroSlides = [
   {
-    image: 'assets/slideshow/hero',
+    image: 'assets/slideshow/hero1.png',
     title: 'Peter Harvard',
     subtitle: 'International Schools',
     desc: 'Nurturing Excellence, Inspiring Innovation, and Building Global Leaders for Tomorrow.'
@@ -162,152 +162,364 @@ const galleryImages = [
 ];
 
 const Home = () => {
-  const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
-  const [activeCarouselIndex, setActiveCarouselIndex] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentHeroSlide((prev) => (prev + 1) % heroSlides.length);
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
     }, 6000);
     return () => clearInterval(timer);
   }, []);
 
-  const nextCarousel = () => setActiveCarouselIndex((prev) => (prev + 1) % galleryImages.length);
-  const prevCarousel = () => setActiveCarouselIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
 
   return (
-    <div className="overflow-x-hidden bg-white dark:bg-gray-950">
+    <div className="overflow-x-hidden">
 
-      {/* ── MAD HERO (Just Text and Slideshow) ── */}
+      {/* ── Hero Slideshow ── */}
       <section className="relative h-screen flex items-center justify-center bg-gray-950 text-white overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
-            key={currentHeroSlide}
+            key={currentSlide}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.5 }}
+            transition={{ duration: 1.2, ease: "easeInOut" }}
             className="absolute inset-0 w-full h-full"
           >
-            <img
-              src={heroSlides[currentHeroSlide].image}
+            <motion.img
+              initial={{ scale: 1.1, opacity: 0 }}
+              animate={{ scale: 1, opacity: 0.5 }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
+              src={heroSlides[currentSlide].image}
               alt="School Campus"
-              className="absolute inset-0 w-full h-full object-cover opacity-50 grayscale-[20%]"
+              className="absolute inset-0 w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/80" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(0,0,0,0.6)_100%)]" />
           </motion.div>
         </AnimatePresence>
 
-        <div className="relative z-10 w-full px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-          >
-            <h1 className="text-[12vw] md:text-[14vw] font-black tracking-[-0.05em] leading-[0.85] select-none text-white drop-shadow-2xl">
-              PETER <br />
-              <span className="text-secondary drop-shadow-[0_0_50px_rgba(220,38,38,0.3)]">HARVARD</span>
-            </h1>
-            <div className="mt-12 overflow-hidden py-4 border-y border-white/10 backdrop-blur-sm max-w-4xl mx-auto">
-              <motion.div 
-                animate={{ x: [0, -1000] }}
-                transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
-                className="flex whitespace-nowrap gap-20 text-2xl md:text-4xl font-bold uppercase tracking-[0.4em] text-white/40"
+        <div className="relative z-10 max-w-5xl mx-auto px-4 text-center">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentSlide}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -30 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+              <motion.span
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2, duration: 0.4 }}
+                className="inline-flex items-center gap-2 bg-secondary/10 border border-secondary/40 text-white text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] px-6 py-2.5 rounded-full mb-8 backdrop-blur-md"
               >
-                <span>International Schools · Kubwa Abuja · Excellence in Education · Nurturing Global Leaders</span>
-                <span>International Schools · Kubwa Abuja · Excellence in Education · Nurturing Global Leaders</span>
-              </motion.div>
+                <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse" />
+                Est. 2017 · Kubwa, Abuja
+              </motion.span>
+              <h1 className="text-5xl sm:text-6xl md:text-8xl font-black mb-6 tracking-tight leading-[1.05] drop-shadow-2xl">
+                {heroSlides[currentSlide].title} <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary via-red-500 to-orange-500">
+                  {heroSlides[currentSlide].subtitle}
+                </span>
+              </h1>
+              <p className="text-lg md:text-2xl mb-12 max-w-3xl mx-auto text-gray-200/90 leading-relaxed font-medium">
+                {heroSlides[currentSlide].desc}
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.98 }}>
+                  <Link
+                    to="/admission"
+                    className="group relative flex items-center gap-3 bg-secondary hover:bg-red-700 text-white px-10 py-5 rounded-2xl text-base font-bold transition-all shadow-2xl shadow-red-500/40"
+                  >
+                    Apply Now 
+                    <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.98 }}>
+                  <Link
+                    to="/portal"
+                    className="flex items-center gap-3 bg-white/5 hover:bg-white/10 backdrop-blur-xl text-white border border-white/20 px-10 py-5 rounded-2xl text-base font-bold transition-all ring-1 ring-white/10 hover:ring-white/30"
+                  >
+                    Visit Portal
+                  </Link>
+                </motion.div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Slide Controls */}
+        <div className="absolute inset-x-0 bottom-12 z-20 flex flex-col items-center gap-8">
+          <div className="flex items-center gap-4 px-4 py-2 bg-black/20 backdrop-blur-sm rounded-full border border-white/10">
+            <button onClick={prevSlide} className="p-2 hover:text-secondary transition-colors"><ChevronLeft size={20} /></button>
+            <div className="flex items-center gap-2.5">
+              {heroSlides.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentSlide(i)}
+                  className={`h-1.5 transition-all duration-500 rounded-full ${i === currentSlide ? 'w-10 bg-secondary' : 'w-2.5 bg-white/30 hover:bg-white/50'}`}
+                />
+              ))}
+            </div>
+            <button onClick={nextSlide} className="p-2 hover:text-secondary transition-colors"><ChevronRight size={20} /></button>
+          </div>
+
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ repeat: Infinity, duration: 2.5, ease: 'easeInOut' }}
+            className="hidden md:block"
+          >
+            <div className="w-[30px] h-[50px] border-2 border-white/20 rounded-full flex justify-center pt-2.5">
+              <motion.div 
+                animate={{ opacity: [0, 1, 0], y: [0, 15, 20] }}
+                transition={{ repeat: Infinity, duration: 2 }}
+                className="w-1.5 h-1.5 bg-secondary rounded-full" 
+              />
             </div>
           </motion.div>
         </div>
+      </section>
 
-        {/* Hero Dots */}
-        <div className="absolute bottom-12 z-20 flex gap-4">
-          {heroSlides.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrentHeroSlide(i)}
-              className={`w-12 h-1.5 transition-all duration-500 rounded-full ${i === currentHeroSlide ? 'bg-secondary' : 'bg-white/20 hover:bg-white/40'}`}
-            />
-          ))}
+      {/* ── About Preview ── */}
+      <section className="py-24 md:py-32 bg-white dark:bg-gray-950 relative overflow-hidden">
+        {/* Subtle background element */}
+        <div className="absolute -top-24 -left-24 w-96 h-96 bg-secondary/5 rounded-full blur-3xl" />
+        <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-red-500/5 rounded-full blur-3xl" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+              className="lg:w-1/2 w-full relative"
+            >
+              <div className="relative z-10">
+                <motion.div
+                  animate={{ y: [0, -15, 0] }}
+                  transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
+                  className="relative"
+                >
+                  <img
+                    src="https://images.unsplash.com/photo-1544391682-1717387ce370?auto=format&fit=crop&w=800&q=70"
+                    alt="Students Studying"
+                    loading="lazy"
+                    className="rounded-3xl shadow-[0_32px_64px_-12px_rgba(0,0,0,0.15)] w-full border border-gray-100 dark:border-gray-800"
+                  />
+                  {/* Floating card */}
+                  <div className="absolute -bottom-8 -right-8 bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-800 hidden sm:block">
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-5xl font-black text-secondary">{yearsRunning}</span>
+                      <span className="text-2xl font-bold text-secondary">+</span>
+                    </div>
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mt-1">Years of Academic <br /> Excellence</p>
+                  </div>
+                </motion.div>
+                
+                {/* Decorative dots */}
+                <div className="absolute -top-6 -left-6 grid grid-cols-6 gap-2 opacity-20 dark:opacity-40">
+                  {[...Array(24)].map((_, i) => (
+                    <div key={i} className="w-1.5 h-1.5 rounded-full bg-secondary" />
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+              className="lg:w-1/2 space-y-8"
+            >
+              <div className="space-y-4">
+                <motion.span
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="text-secondary font-bold tracking-[0.25em] uppercase text-xs block"
+                >
+                  Our Philosophy
+                </motion.span>
+                <h3 className="text-4xl md:text-5xl font-black text-gray-900 dark:text-white leading-[1.15]">
+                  Where Academic Rigor <br /> Meets <span className="text-secondary">Global Citizenship.</span>
+                </h3>
+              </div>
+              
+              <div className="space-y-6">
+                <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
+                  At Peter Harvard International Schools, we believe every child has the potential to become a leader. 
+                  Our curriculum is designed to challenge minds, inspire curiosity, and foster a deep sense 
+                  of social responsibility.
+                </p>
+                <p className="text-gray-500 dark:text-gray-500 leading-relaxed">
+                  We provide a nurturing environment where students are encouraged to think critically, 
+                  work collaboratively, and develop the skills needed for success in the 21st century.
+                </p>
+              </div>
+
+              <motion.div 
+                whileHover={{ x: 6 }} 
+                transition={{ type: 'spring', stiffness: 400 }}
+                className="pt-4"
+              >
+                <Link to="/about" className="inline-flex items-center gap-3 bg-gray-50 dark:bg-gray-900 hover:bg-secondary hover:text-white dark:hover:bg-secondary text-gray-900 dark:text-white px-8 py-4 rounded-2xl font-bold transition-all border border-gray-200 dark:border-gray-800 hover:border-secondary shadow-sm">
+                  Learn our mission <ChevronRight size={20} />
+                </Link>
+              </motion.div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* ── 3D COVERFLOW SLIDESHOW (Gallery) ── */}
+      {/* ── Why PHIS ── */}
+      <section className="py-24 md:py-32 bg-gray-50 dark:bg-gray-900/50 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div {...fadeUp} className="text-center mb-20 max-w-3xl mx-auto">
+            <span className="text-secondary text-xs font-bold uppercase tracking-[0.3em] mb-4 block">Our Strengths</span>
+            <h2 className="text-4xl md:text-6xl font-black text-gray-900 dark:text-white mb-6 tracking-tight">Why Choose PHIS?</h2>
+            <p className="text-gray-600 dark:text-gray-400 text-lg font-medium">
+              We provide an unparalleled educational experience designed to prepare students for a changing world.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {features.map((feature, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ delay: idx * 0.1, duration: 0.6, ease: 'easeOut' }}
+                whileHover={{ y: -10, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
+                className="group relative bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 hover:border-secondary/30 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 cursor-default overflow-hidden"
+              >
+                {/* Hover decorative element */}
+                <div className="absolute -right-8 -top-8 w-24 h-24 bg-secondary/5 rounded-full blur-2xl group-hover:bg-secondary/10 transition-colors" />
+                
+                <div className="relative z-10">
+                  <div className="w-16 h-16 bg-red-50 dark:bg-red-900/20 text-secondary rounded-[1.25rem] flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-secondary group-hover:text-white transition-all duration-500 shadow-lg shadow-red-500/5">
+                    <feature.icon size={30} strokeWidth={1.5} />
+                  </div>
+                  <h4 className="text-xl font-bold mb-4 text-gray-900 dark:text-white group-hover:text-secondary transition-colors leading-tight">{feature.title}</h4>
+                  <p className="text-gray-500 dark:text-gray-400 leading-relaxed font-medium text-sm">{feature.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── School Life ── */}
       <section className="py-24 md:py-32 bg-white dark:bg-gray-950 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 relative flex flex-col items-center">
-          <div className="text-center mb-16">
-            <span className="text-secondary text-xs font-black uppercase tracking-[0.4em] mb-4 block">Our Environment</span>
-            <h2 className="text-4xl md:text-6xl font-black text-gray-900 dark:text-white tracking-tight">School Life Gallery</h2>
-          </div>
-
-          <div className="relative w-full h-[350px] md:h-[550px] flex items-center justify-center perspective-[2000px]">
-            {galleryImages.map((img, i) => {
-              const offset = i - activeCarouselIndex;
-              const absOffset = Math.abs(offset);
-              const isCenter = offset === 0;
-              
-              if (absOffset > 2) return null;
-
-              return (
-                <motion.div
-                  key={i}
-                  initial={false}
-                  animate={{
-                    x: offset * (window.innerWidth > 768 ? 320 : 180),
-                    scale: isCenter ? 1 : 0.75,
-                    rotateY: offset * -35,
-                    zIndex: 10 - absOffset,
-                    opacity: 1 - absOffset * 0.4,
-                  }}
-                  transition={{ type: "spring", stiffness: 260, damping: 20 }}
-                  onClick={() => setActiveCarouselIndex(i)}
-                  className="absolute w-[85%] max-w-[650px] aspect-[16/10] rounded-[3rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] cursor-pointer"
-                >
-                  <img src={img.src} alt={img.label} className="w-full h-full object-cover" />
-                  <div className={`absolute inset-0 bg-black/40 transition-opacity duration-500 ${isCenter ? 'opacity-0' : 'opacity-100'}`} />
-                  {isCenter && (
-                    <motion.div 
-                      initial={{ y: 20, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      className="absolute bottom-12 left-12 text-white"
-                    >
-                      <h3 className="text-4xl font-black tracking-tight">{img.label}</h3>
-                      <p className="text-white/60 font-bold uppercase tracking-widest text-xs mt-3">Peter Harvard INT'L Schools</p>
-                    </motion.div>
-                  )}
-                </motion.div>
-              );
-            })}
-          </div>
-
-          {/* Carousel Controls (Matching Image Style) */}
-          <div className="mt-16 flex flex-col items-center gap-10">
-            <div className="flex items-center gap-6">
-              <button 
-                onClick={prevCarousel} 
-                className="p-3 bg-gray-100 dark:bg-gray-900 rounded-full hover:text-secondary hover:bg-white transition-all shadow-sm"
-              >
-                <ChevronLeft size={24} />
-              </button>
-              
-              <div className="flex items-center gap-3">
-                {galleryImages.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setActiveCarouselIndex(i)}
-                    className={`h-3 transition-all duration-500 rounded-full ${i === activeCarouselIndex ? 'w-10 bg-secondary' : 'w-3 bg-gray-300 dark:bg-gray-800'}`}
-                  />
-                ))}
-              </div>
-
-              <button 
-                onClick={nextCarousel} 
-                className="p-3 bg-gray-100 dark:bg-gray-900 rounded-full hover:text-secondary hover:bg-white transition-all shadow-sm"
-              >
-                <ChevronRight size={24} />
-              </button>
+        <div className="max-w-7xl mx-auto px-4 relative">
+          <motion.div {...fadeUp} className="flex flex-col md:flex-row justify-between items-center md:items-end mb-16 gap-6 text-center md:text-left">
+            <div>
+              <span className="text-secondary text-xs font-bold uppercase tracking-[0.3em] mb-4 block">Our Environment</span>
+              <h2 className="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-4 tracking-tight">School Life at PHIS</h2>
+              <p className="text-gray-500 dark:text-gray-400 text-lg font-medium">A glimpse into the vibrant world of Peter Harvard.</p>
             </div>
+            <motion.div whileHover={{ x: 6 }} transition={{ type: 'spring', stiffness: 400 }}>
+              <Link to="/gallery" className="bg-gray-50 dark:bg-gray-900 hover:bg-secondary hover:text-white dark:hover:bg-secondary text-gray-900 dark:text-white px-8 py-4 rounded-2xl font-bold transition-all border border-gray-200 dark:border-gray-800 hover:border-secondary shadow-sm inline-flex items-center gap-2">
+                View Full Gallery <ChevronRight size={20} />
+              </Link>
+            </motion.div>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 h-auto md:h-[600px]">
+            {galleryImages.map((img, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, scale: 0.96, y: 30 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ delay: i * 0.1, duration: 0.7, ease: [0.21, 0.45, 0.32, 0.9] }}
+                className={`relative overflow-hidden rounded-[2.5rem] group ${img.span} h-64 md:h-auto`}
+              >
+                <img
+                  src={img.src}
+                  alt={img.label}
+                  loading="lazy"
+                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-10">
+                  <motion.span 
+                    initial={{ y: 20, opacity: 0 }}
+                    whileHover={{ y: 0, opacity: 1 }}
+                    className="text-white font-black text-2xl tracking-tight"
+                  >
+                    {img.label}
+                  </motion.span>
+                  <p className="text-white/70 text-sm mt-2 font-medium">Explore life at PHIS</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Stats ── */}
+      <section className="py-24 md:py-32 bg-gray-900 relative overflow-hidden">
+        <div className="absolute inset-0">
+          <img 
+            src="https://images.unsplash.com/photo-1523050853064-dbad3219756a?auto=format&fit=crop&w=1920&q=80" 
+            className="w-full h-full object-cover opacity-10 grayscale" 
+            alt="Stats Background"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/95 to-gray-900" />
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-secondary to-transparent opacity-30" />
+        </div>
+
+        <div className="max-w-6xl mx-auto px-4 relative z-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-8">
+            <StatCard value={yearsRunning} suffix="+" label="Years of Excellence" />
+            <StatCard value={1200} suffix="+" label="Students Enrolled" />
+            <StatCard value={150} suffix="+" label="Expert Faculty" />
+            <StatCard value={100} suffix="%" label="Success Rate" />
+          </div>
+        </div>
+      </section>
+
+      {/* ── Blog / Latest News ── */}
+      <BlogSection />
+
+      {/* ── CTA ── */}
+      <section className="py-24 md:py-32 bg-white dark:bg-gray-950 relative overflow-hidden">
+        <div className="max-w-5xl mx-auto px-4 relative z-10">
+          <div className="bg-secondary p-12 md:p-20 rounded-[3rem] shadow-[0_40px_80px_-20px_rgba(220,38,38,0.3)] relative overflow-hidden group">
+            {/* Decorative background elements */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-48 -mt-48 blur-3xl group-hover:bg-white/15 transition-all duration-700" />
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/10 rounded-full -ml-48 -mb-48 blur-3xl" />
+            
+            <motion.div {...fadeUp} className="max-w-3xl mx-auto text-center text-white relative z-10">
+              <span className="text-white/80 text-xs font-bold uppercase tracking-[0.4em] mb-6 block">Admissions Open</span>
+              <h2 className="text-4xl md:text-6xl font-black mb-8 leading-[1.1] tracking-tight">Ready to join the <br /> <span className="underline decoration-white/30 underline-offset-8">PHIS Excellence?</span></h2>
+              <p className="text-lg md:text-xl mb-12 text-white/90 font-medium leading-relaxed max-w-2xl mx-auto">
+                Discover a community where your child's potential is nurtured and their future is built on a foundation of excellence.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.98 }}>
+                  <Link
+                    to="/admission"
+                    className="bg-white text-secondary hover:bg-gray-100 px-12 py-5 rounded-2xl text-lg font-black transition-all shadow-2xl block"
+                  >
+                    Apply for Admission
+                  </Link>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.98 }}>
+                  <Link
+                    to="/contact"
+                    className="bg-transparent text-white border-2 border-white/30 hover:bg-white/10 px-12 py-5 rounded-2xl text-lg font-black transition-all block"
+                  >
+                    Contact Registrar
+                  </Link>
+                </motion.div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
