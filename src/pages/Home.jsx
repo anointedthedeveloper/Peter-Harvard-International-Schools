@@ -190,9 +190,9 @@ const Home = () => {
     <div className="overflow-x-hidden bg-white dark:bg-gray-950">
 
       {/* ── Hero Slideshow ── */}
-      <section className="relative h-screen min-h-[600px] flex flex-col overflow-hidden">
+      <section className="relative h-screen min-h-[600px] overflow-hidden flex items-center justify-center">
 
-        {/* Full-bleed background */}
+        {/* Blurred full-bleed background */}
         {heroSlides.map((slide, i) => (
           <motion.div
             key={i}
@@ -200,16 +200,16 @@ const Home = () => {
             animate={{ opacity: i === currentSlide ? 1 : 0 }}
             transition={{ duration: 0.8 }}
           >
-            <img src={slide.image} alt={slide.title} className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-black/55" />
+            <img src={slide.image} alt="" className="w-full h-full object-cover scale-110 blur-md" />
+            <div className="absolute inset-0 bg-black/60" />
           </motion.div>
         ))}
 
-        {/* All content sits below the fixed navbar (80px) */}
-        <div className="relative z-10 flex flex-col items-center justify-between flex-1 w-full px-4 pt-24 pb-6">
+        {/* Centered content column */}
+        <div className="relative z-10 flex flex-col items-center justify-center w-full h-full px-4 gap-4">
 
-          {/* Carousel */}
-          <div className="relative w-full flex items-center justify-center flex-1" style={{ minHeight: 0 }}>
+          {/* Carousel — center card sharp, sides blurred by bg */}
+          <div className="relative w-full flex items-center justify-center" style={{ height: '46vh', maxHeight: '420px', minHeight: '220px' }}>
             {heroSlides.map((slide, i) => {
               const total = heroSlides.length;
               let offset = (i - currentSlide + total) % total;
@@ -221,14 +221,14 @@ const Home = () => {
                 <motion.div
                   key={i}
                   animate={{
-                    x: `${offset * 66}%`,
-                    scale: isCenter ? 1 : 0.68,
-                    opacity: isCenter ? 1 : 0.35,
+                    x: `${offset * 65}%`,
+                    scale: isCenter ? 1 : 0.7,
+                    opacity: isCenter ? 1 : 0.3,
                     zIndex: isCenter ? 10 : 5,
                   }}
                   transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                   onClick={() => !isCenter && setCurrentSlide(i)}
-                  className={`absolute w-[75%] sm:w-[65%] md:w-[55%] lg:w-[50%] aspect-video rounded-[1.5rem] overflow-hidden shadow-2xl ring-1 ring-white/20 ${!isCenter ? 'cursor-pointer' : ''}`}
+                  className={`absolute w-[80%] sm:w-[68%] md:w-[58%] lg:w-[52%] h-full rounded-[1.5rem] overflow-hidden shadow-2xl ring-1 ring-white/20 ${!isCenter ? 'cursor-pointer' : ''}`}
                 >
                   <img src={slide.image} alt={slide.title} className="w-full h-full object-cover" />
                 </motion.div>
@@ -236,64 +236,58 @@ const Home = () => {
             })}
           </div>
 
-          {/* Controls + Text + Buttons */}
-          <div className="flex flex-col items-center gap-3 w-full max-w-2xl">
-
-            {/* Dot controls */}
-            <div className="flex items-center gap-4">
-              <button onClick={prevSlide} className="w-9 h-9 flex items-center justify-center rounded-full bg-white/15 backdrop-blur-sm text-white hover:bg-white/30 transition-all">
-                <ChevronLeft size={18} />
-              </button>
-              <div className="flex items-center gap-2">
-                {heroSlides.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setCurrentSlide(i)}
-                    className={`h-2 transition-all duration-500 rounded-full ${i === currentSlide ? 'w-7 bg-white' : 'w-2 bg-white/40 hover:bg-white/60'}`}
-                  />
-                ))}
-              </div>
-              <button onClick={nextSlide} className="w-9 h-9 flex items-center justify-center rounded-full bg-white/15 backdrop-blur-sm text-white hover:bg-white/30 transition-all">
-                <ChevronRight size={18} />
-              </button>
+          {/* Controls */}
+          <div className="flex items-center gap-3">
+            <button onClick={prevSlide} className="w-9 h-9 flex items-center justify-center rounded-full bg-white/15 backdrop-blur-sm text-white hover:bg-white/30 transition-all">
+              <ChevronLeft size={18} />
+            </button>
+            <div className="flex items-center gap-2">
+              {heroSlides.map((_, i) => (
+                <button key={i} onClick={() => setCurrentSlide(i)}
+                  className={`h-2 transition-all duration-500 rounded-full ${i === currentSlide ? 'w-7 bg-white' : 'w-2 bg-white/40 hover:bg-white/60'}`}
+                />
+              ))}
             </div>
-
-            {/* Title */}
-            <motion.h1
-              key={`title-${currentSlide}`}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-white text-center"
-            >
-              {heroSlides[currentSlide].title}{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-300">
-                {heroSlides[currentSlide].subtitle}
-              </span>
-            </motion.h1>
-
-            {/* Description */}
-            <motion.p
-              key={`desc-${currentSlide}`}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.1 }}
-              className="text-sm md:text-base text-white/75 text-center max-w-lg leading-relaxed"
-            >
-              {heroSlides[currentSlide].desc}
-            </motion.p>
-
-            {/* Buttons */}
-            <div className="flex flex-row items-center justify-center gap-3">
-              <Link to="/admission" className="flex items-center gap-2 bg-secondary hover:bg-red-700 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg text-sm">
-                Apply Now <ChevronRight size={15} />
-              </Link>
-              <Link to="/portal" className="flex items-center gap-2 bg-white/15 backdrop-blur-sm hover:bg-white/25 text-white px-6 py-3 rounded-xl font-bold transition-all text-sm">
-                Visit Portal
-              </Link>
-            </div>
-
+            <button onClick={nextSlide} className="w-9 h-9 flex items-center justify-center rounded-full bg-white/15 backdrop-blur-sm text-white hover:bg-white/30 transition-all">
+              <ChevronRight size={18} />
+            </button>
           </div>
+
+          {/* Title */}
+          <motion.h1
+            key={`title-${currentSlide}`}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-white text-center"
+          >
+            {heroSlides[currentSlide].title}{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-300">
+              {heroSlides[currentSlide].subtitle}
+            </span>
+          </motion.h1>
+
+          {/* Description */}
+          <motion.p
+            key={`desc-${currentSlide}`}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="text-sm md:text-base text-white/75 text-center max-w-lg leading-relaxed"
+          >
+            {heroSlides[currentSlide].desc}
+          </motion.p>
+
+          {/* Buttons */}
+          <div className="flex flex-row items-center gap-3">
+            <Link to="/admission" className="flex items-center gap-2 bg-secondary hover:bg-red-700 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg text-sm">
+              Apply Now <ChevronRight size={15} />
+            </Link>
+            <Link to="/portal" className="flex items-center gap-2 bg-white/15 backdrop-blur-sm hover:bg-white/25 text-white px-6 py-3 rounded-xl font-bold transition-all text-sm">
+              Visit Portal
+            </Link>
+          </div>
+
         </div>
       </section>
 
