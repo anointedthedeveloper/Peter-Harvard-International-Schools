@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (password) => {
     const { error } = await supabase.auth.signInWithPassword({
-      email: 'admin@peterharvard.sch.ng',
+      email: 'admin@phis.local',
       password,
     });
     if (error) return false;

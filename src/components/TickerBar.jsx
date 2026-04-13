@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Megaphone, X } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
-const ITEMS = [
+const FALLBACK = [
   'Excellence in Education', 'Admissions Open', 'World-Class Facilities',
   'Expert Faculty', 'Global Curriculum', 'Nurturing Future Leaders',
   "Peter Harvard Int'l Schools",
@@ -10,10 +11,20 @@ const ITEMS = [
 
 const TickerBar = () => {
   const [open, setOpen] = useState(false);
+  const [items, setItems] = useState(FALLBACK);
+
+  useEffect(() => {
+    supabase
+      .from('ticker_items')
+      .select('text')
+      .order('position', { ascending: true })
+      .then(({ data }) => {
+        if (data && data.length > 0) setItems(data.map(d => d.text));
+      });
+  }, []);
 
   return (
     <>
-      {/* Megaphone toggle button */}
       <motion.button
         onClick={() => setOpen(o => !o)}
         whileTap={{ scale: 0.9 }}
@@ -34,7 +45,6 @@ const TickerBar = () => {
         </AnimatePresence>
       </motion.button>
 
-      {/* Ticker bar */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -47,7 +57,7 @@ const TickerBar = () => {
             <div className="flex animate-ticker whitespace-nowrap">
               {[...Array(3)].map((_, ri) => (
                 <div key={ri} className="flex items-center gap-8 px-8 shrink-0">
-                  {ITEMS.map((text, i) => (
+                  {items.map((text, i) => (
                     <span key={i} className="flex items-center gap-3 text-white font-bold text-sm uppercase tracking-widest">
                       <span className="w-1.5 h-1.5 rounded-full bg-white/60 shrink-0" />
                       {text}

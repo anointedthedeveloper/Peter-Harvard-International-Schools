@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Images, BookOpen, LogOut, Upload, Trash2, Plus, X,
   CheckCircle, AlertCircle, Eye, LayoutDashboard, TrendingUp,
-  FileText, Download, Pencil, Save, ChevronDown, ChevronUp,
+  FileText, Download, Pencil, Save, ChevronDown, ChevronUp, Megaphone,
+  GripVertical,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../lib/auth';
@@ -444,6 +445,133 @@ const AdmissionsTab = ({ toast }) => {
   );
 };
 
+// ── Ticker Tab ───────────────────────────────────────────────
+const TickerTab = ({ toast }) => {
+  const [items, setItems] = useState([]);
+  const [newText, setNewText] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  const fetchItems = async () => {
+    const { data } = await supabase.from('ticker_items').select('*').order('position', { ascending: true });
+    if (data) setItems(data);
+  };
+
+  useEffect(() => { fetchItems(); }, []);
+
+  const handleAdd = async (e) => {
+    e.preventDefault();
+    if (!newText.trim()) return;
+    setSaving(true);
+    const { error } = await supabase.from('ticker_items').insert({ text: newText.trim(), position: items.length });
+    if (error) toast(error.message, 'error');
+    else { toast('Item added!', 'success'); setNewText(''); fetchItems(); }
+    setSaving(false);
+  };
+
+  const handleDelete = async (item) => {
+    await supabase.from('ticker_items').delete().eq('id', item.id);
+    toast('Item removed', 'success');
+    fetchItems();
+  };
+
+  const handleEdit = async (item, text) => {
+    if (!text.trim()) return;
+    await supabase.from('ticker_items').update({ text: text.trim() }).eq('id', item.id);
+    fetchItems();
+  };
+
+  const moveItem = async (idx, dir) => {
+    const next = [...items];
+    const swap = idx + dir;
+    if (swap < 0 || swap >= next.length) return;
+    [next[idx], next[swap]] = [next[swap], next[idx]];
+    setItems(next);
+    await Promise.all(next.map((item, i) => supabase.from('ticker_items').update({ position: i }).eq('id', item.id)));
+  };
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {/* Add new */}
+      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-sm">
+        <h3 className="font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+          <Megaphone size={18} className="text-green-500" /> Ticker Announcements
+        </h3>
+        <p className="text-xs text-gray-400 mb-5">These scroll across the green ticker bar on the site.</p>
+        <form onSubmit={handleAdd} className="flex gap-2 mb-6">
+          <input
+            value={newText}
+            onChange={e => setNewText(e.target.value)}
+            placeholder="e.g. Term 2 Results Out Now!"
+            className={inputClass + ' flex-1'}
+          />
+          <motion.button type="submit" disabled={saving} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+            className="bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white font-bold px-4 py-2 rounded-xl transition-colors flex items-center gap-1.5 text-sm whitespace-nowrap">
+            {saving ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Plus size={15} /> Add</>}
+          </motion.button>
+        </form>
+
+        {/* Live preview */}
+        <div className="rounded-xl overflow-hidden bg-green-600 py-2.5 px-4">
+          <p className="text-white/60 text-[10px] font-bold uppercase tracking-widest mb-1.5">Live Preview</p>
+          <div className="flex gap-6 overflow-hidden">
+            {items.slice(0, 4).map((item, i) => (
+              <span key={i} className="flex items-center gap-2 text-white font-bold text-xs uppercase tracking-widest whitespace-nowrap">
+                <span className="w-1.5 h-1.5 rounded-full bg-white/60 shrink-0" />
+                {item.text}
+              </span>
+            ))}
+            {items.length > 4 && <span className="text-white/50 text-xs">+{items.length - 4} more</span>}
+          </div>
+        </div>
+      </div>
+
+      {/* Items list */}
+      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-sm">
+        <h3 className="font-bold text-gray-900 dark:text-white mb-5">{items.length} Item{items.length !== 1 ? 's' : ''}</h3>
+        {items.length === 0
+          ? <p className="text-gray-400 text-sm text-center py-12">No items yet. Add one to get started.</p>
+          : <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1">
+              {items.map((item, idx) => (
+                <TickerItemRow
+                  key={item.id}
+                  item={item}
+                  idx={idx}
+                  total={items.length}
+                  onDelete={handleDelete}
+                  onEdit={handleEdit}
+                  onMove={moveItem}
+                />
+              ))}
+            </div>
+        }
+      </div>
+    </div>
+  );
+};
+
+const TickerItemRow = ({ item, idx, total, onDelete, onEdit, onMove }) => {
+  const [editing, setEditing] = useState(false);
+  const [val, setVal] = useState(item.text);
+
+  const save = () => { onEdit(item, val); setEditing(false); };
+
+  return (
+    <div className="flex items-center gap-2 p-3 rounded-xl border border-gray-100 dark:border-gray-800 hover:border-green-200 dark:hover:border-green-900/40 transition-colors group">
+      <GripVertical size={14} className="text-gray-300 shrink-0" />
+      <div className="flex flex-col gap-0.5 shrink-0">
+        <button onClick={() => onMove(idx, -1)} disabled={idx === 0} className="text-gray-300 hover:text-gray-500 disabled:opacity-20 transition-colors"><ChevronUp size={12} /></button>
+        <button onClick={() => onMove(idx, 1)} disabled={idx === total - 1} className="text-gray-300 hover:text-gray-500 disabled:opacity-20 transition-colors"><ChevronDown size={12} /></button>
+      </div>
+      {editing
+        ? <input autoFocus value={val} onChange={e => setVal(e.target.value)} onBlur={save} onKeyDown={e => e.key === 'Enter' && save()} className="flex-1 text-sm bg-gray-50 dark:bg-gray-800 border border-green-300 rounded-lg px-2 py-1 focus:outline-none dark:text-white" />
+        : <span className="flex-1 text-sm text-gray-700 dark:text-gray-300 font-medium truncate">{item.text}</span>
+      }
+      <button onClick={() => setEditing(e => !e)} className="p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors"><Pencil size={13} /></button>
+      <button onClick={() => onDelete(item)} className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"><Trash2 size={13} /></button>
+    </div>
+  );
+};
+
 // ── Overview Tab ─────────────────────────────────────────────
 const OverviewTab = () => {
   const [stats, setStats] = useState({ gallery: 0, posts: 0, admissions: 0 });
@@ -512,6 +640,7 @@ const Dashboard = () => {
     { key: 'admissions', icon: FileText, label: 'Admissions' },
     { key: 'gallery', icon: Images, label: 'Gallery' },
     { key: 'blog', icon: BookOpen, label: 'Blog Posts' },
+    { key: 'ticker', icon: Megaphone, label: 'Ticker' },
   ];
 
   return (
@@ -538,7 +667,7 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-secondary transition-colors font-semibold">
+              <button onClick={() => window.open('/', '_blank')} className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-secondary transition-colors font-semibold">
                 <Eye size={14} /> <span className="hidden sm:inline">View Site</span>
               </button>
               <button onClick={() => { logout(); navigate('/'); }} className="flex items-center gap-1.5 text-xs text-red-400 hover:text-red-600 transition-colors font-semibold">
@@ -563,6 +692,7 @@ const Dashboard = () => {
             {tab === 'admissions' && <AdmissionsTab toast={toast} />}
             {tab === 'gallery' && <GalleryTab toast={toast} />}
             {tab === 'blog' && <BlogTab toast={toast} />}
+            {tab === 'ticker' && <TickerTab toast={toast} />}
           </motion.div>
         </AnimatePresence>
       </div>
