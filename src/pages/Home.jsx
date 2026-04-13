@@ -192,7 +192,7 @@ const Home = () => {
       {/* ── Hero Slideshow ── */}
       <section className="relative h-screen min-h-[600px] overflow-hidden">
 
-        {/* Blurred full-bleed background */}
+        {/* Full-bleed slide images */}
         {heroSlides.map((slide, i) => (
           <motion.div
             key={i}
@@ -200,68 +200,47 @@ const Home = () => {
             animate={{ opacity: i === currentSlide ? 1 : 0 }}
             transition={{ duration: 0.8 }}
           >
-            <img src={slide.image} alt="" className="w-full h-full object-cover scale-110 blur-sm" />
+            <img src={slide.image} alt="" className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-black/40" />
           </motion.div>
         ))}
 
-        {/* Main centered card with text overlay */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 sm:px-8 pt-16">
-
-          {/* Card */}
-          <div className="relative w-full max-w-5xl rounded-[2rem] overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.5)]" style={{ height: 'clamp(320px, 65vh, 620px)' }}>
-
-            {/* Slide images inside card */}
-            {heroSlides.map((slide, i) => (
-              <motion.img
-                key={i}
-                src={slide.image}
-                alt={slide.title}
-                className="absolute inset-0 w-full h-full object-cover"
-                animate={{ opacity: i === currentSlide ? 1 : 0 }}
-                transition={{ duration: 0.7 }}
-              />
-            ))}
-
-            {/* Gradient overlay for text readability */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-            {/* Text overlay at bottom of card */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 md:p-10">
-              <motion.h1
-                key={`title-${currentSlide}`}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
-                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-white mb-2"
-              >
-                {heroSlides[currentSlide].title}{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-300">
-                  {heroSlides[currentSlide].subtitle}
-                </span>
-              </motion.h1>
-              <motion.p
-                key={`desc-${currentSlide}`}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.1 }}
-                className="text-sm md:text-base text-white/75 mb-5 max-w-xl leading-relaxed"
-              >
-                {heroSlides[currentSlide].desc}
-              </motion.p>
-              <div className="flex flex-row items-center gap-3">
-                <Link to="/admission" className="flex items-center gap-2 bg-secondary hover:bg-red-700 text-white px-5 py-2.5 rounded-xl font-bold transition-all shadow-lg text-sm">
-                  Apply Now <ChevronRight size={15} />
-                </Link>
-                <Link to="/portal" className="flex items-center gap-2 bg-white/15 backdrop-blur-sm hover:bg-white/25 text-white px-5 py-2.5 rounded-xl font-bold transition-all text-sm border border-white/20">
-                  Visit Portal
-                </Link>
-              </div>
+        {/* Text + controls overlay */}
+        <div className="absolute inset-0 flex flex-col justify-end px-6 sm:px-12 md:px-20 pb-16 pt-16">
+          <div className="max-w-3xl">
+            <motion.h1
+              key={`title-${currentSlide}`}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-white mb-3"
+            >
+              {heroSlides[currentSlide].title}{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-300">
+                {heroSlides[currentSlide].subtitle}
+              </span>
+            </motion.h1>
+            <motion.p
+              key={`desc-${currentSlide}`}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+              className="text-sm md:text-base text-white/75 mb-6 max-w-xl leading-relaxed"
+            >
+              {heroSlides[currentSlide].desc}
+            </motion.p>
+            <div className="flex flex-row items-center gap-3 mb-8">
+              <Link to="/admission" className="flex items-center gap-2 bg-secondary hover:bg-red-700 text-white px-5 py-2.5 rounded-xl font-bold transition-all shadow-lg text-sm">
+                Apply Now <ChevronRight size={15} />
+              </Link>
+              <Link to="/portal" className="flex items-center gap-2 bg-white/15 backdrop-blur-sm hover:bg-white/25 text-white px-5 py-2.5 rounded-xl font-bold transition-all text-sm border border-white/20">
+                Visit Portal
+              </Link>
             </div>
           </div>
 
-          {/* Dot + arrow controls below card */}
-          <div className="flex items-center gap-4 mt-5">
+          {/* Dot + arrow controls */}
+          <div className="flex items-center gap-4">
             <button onClick={prevSlide} className="w-9 h-9 flex items-center justify-center rounded-full bg-white/15 backdrop-blur-sm text-white hover:bg-white/30 transition-all">
               <ChevronLeft size={18} />
             </button>
@@ -276,7 +255,6 @@ const Home = () => {
               <ChevronRight size={18} />
             </button>
           </div>
-
         </div>
       </section>
 
