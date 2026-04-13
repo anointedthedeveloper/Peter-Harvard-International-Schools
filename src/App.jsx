@@ -4,6 +4,7 @@ import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
+import TickerBar from './components/TickerBar';
 import PageLoader from './components/PageLoader';
 import PageTransition from './components/PageTransition';
 import Home from './pages/Home';
@@ -78,6 +79,7 @@ function App() {
             <AnimatedRoutes />
           </main>
           <ScrollToTop />
+          <TickerBar />
         </div>
       </Router>
     </AuthProvider>

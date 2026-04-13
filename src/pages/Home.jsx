@@ -257,22 +257,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ── Scroll Ticker ── */}
-      <div className="relative overflow-hidden bg-green-600 shadow-[0_4px_20px_rgba(22,163,74,0.4)] py-3">
-        <div className="flex animate-ticker whitespace-nowrap">
-          {[...Array(3)].map((_, ri) => (
-            <div key={ri} className="flex items-center gap-8 px-8 shrink-0">
-              {['Excellence in Education', 'Admissions Open', 'World-Class Facilities', 'Expert Faculty', 'Global Curriculum', 'Nurturing Future Leaders', 'Peter Harvard Int\'l Schools'].map((text, i) => (
-                <span key={i} className="flex items-center gap-3 text-white font-bold text-sm uppercase tracking-widest">
-                  <span className="w-1.5 h-1.5 rounded-full bg-white/60 shrink-0" />
-                  {text}
-                </span>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* ── About Preview ── */}
       <section className="py-24 md:py-32 bg-white dark:bg-gray-950 relative overflow-hidden">
         {/* Subtle background element */}
@@ -453,15 +437,10 @@ const Home = () => {
       </section>
 
       {/* ── Stats ── */}
-      <section className="py-24 md:py-32 bg-gray-900 relative overflow-hidden">
+      <section className="py-24 md:py-32 bg-green-700 relative overflow-hidden">
         <div className="absolute inset-0">
-          <img 
-            src="https://images.unsplash.com/photo-1523050853064-dbad3219756a?auto=format&fit=crop&w=1920&q=80" 
-            className="w-full h-full object-cover opacity-10 grayscale" 
-            alt="Stats Background"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/95 to-gray-900" />
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-secondary to-transparent opacity-30" />
+          <div className="absolute inset-0 bg-gradient-to-br from-green-600 via-green-700 to-green-800" />
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
         </div>
 
         <div className="max-w-6xl mx-auto px-4 relative z-10">
