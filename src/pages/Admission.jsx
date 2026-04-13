@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Phone, MapPin, Upload, ChevronRight, X, CheckCircle, BookOpen, Eye, Edit2 } from 'lucide-react';
+import { User, Phone, MapPin, Upload, ChevronRight, X, CheckCircle, Eye, Edit2, PhoneCall } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 const inputClass = 'w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary transition-all dark:text-white text-sm';
@@ -8,7 +8,7 @@ const inputClass = 'w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-g
 const CLASSES = [
   'Crèche', 'Playgroup', 'Pre-Nursery',
   'Nursery 1', 'Nursery 2',
-  'Primary 1', 'Primary 2', 'Primary 3', 'Primary 4', 'Primary 5', 'Primary 6',
+  'Primary 1', 'Primary 2', 'Primary 3', 'Primary 4', 'Primary 5',
   'JSS 1', 'JSS 2', 'JSS 3',
   'SSS 1', 'SSS 2', 'SSS 3',
 ];
@@ -46,10 +46,12 @@ const Admission = () => {
     fileRef.current.value = '';
   };
 
+  const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
   const handlePreview = (e) => {
     e.preventDefault();
     setStep('preview');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollTop();
   };
 
   const handleSubmit = async () => {
@@ -79,6 +81,7 @@ const Admission = () => {
       });
       if (error) throw error;
       setStep('success');
+      scrollTop();
     } catch (err) {
       alert(err.message || 'Submission failed. Please try again.');
       setStep('form');
@@ -86,48 +89,26 @@ const Admission = () => {
     setLoading(false);
   };
 
-  const FormHeader = () => (
-    <div className="bg-secondary px-8 py-6 flex items-center gap-4">
-      <img src="/assets/Badge.jpg" alt="PHIS Logo" className="w-14 h-14 rounded-xl object-cover border-2 border-white/30 shadow-lg flex-shrink-0" />
-      <div>
-        <h2 className="text-xl font-extrabold text-white">Admission Application Form</h2>
-        <p className="text-white/70 text-xs mt-0.5">Peter Harvard INT'L School — {new Date().getFullYear()} Session</p>
-      </div>
-    </div>
-  );
+  const FormHeader = () => null;
 
   return (
-    <div className="pt-20 min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col pt-[65px]">
 
-      {/* Hero */}
-      <section className="relative h-[50vh] flex items-center justify-center overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1600&q=70"
-          alt="Admission"
-          loading="eager"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/55 to-secondary/80" />
-        <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.65, ease: 'easeOut' }}
-          className="relative z-10 text-center text-white px-4"
-        >
-          <p className="bg-white/10 backdrop-blur-sm border border-white/20 text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full inline-block mb-6">
-            Enrolment Open
-          </p>
-          <h1 className="text-4xl md:text-6xl font-bold mb-5">Start Your Application</h1>
-          <div className="w-20 h-1 bg-secondary mx-auto mb-6 rounded-full" />
-          <p className="text-lg max-w-xl mx-auto opacity-85 leading-relaxed">
-            Join the Peter Harvard family. Fill in the form below to begin your admission process.
-          </p>
-        </motion.div>
-      </section>
+      {/* Header */}
+      <div className="bg-secondary">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-5 flex items-center gap-3">
+          <img src="/assets/Badge.jpg" alt="PHIS" className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl object-cover flex-shrink-0" />
+          <div className="min-w-0">
+            <p className="text-white/70 text-[10px] sm:text-xs font-bold uppercase tracking-widest">Enrolment Open · {new Date().getFullYear()} Session</p>
+            <h1 className="text-lg sm:text-2xl font-black text-white leading-tight">Admission Application</h1>
+          </div>
+          <span className="ml-auto bg-white/15 text-white text-[10px] sm:text-xs font-bold px-2.5 py-1.5 rounded-full border border-white/20 flex-shrink-0 hidden xs:block">Peter Harvard Int'l Schools</span>
+        </div>
+      </div>
 
       {/* Form / Preview / Success */}
-      <section className="py-16 md:py-20">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6">
+      <section className="flex-1 py-4 sm:py-6">
+        <div className="max-w-3xl mx-auto px-3 sm:px-6">
           <AnimatePresence mode="wait">
 
             {/* ── SUCCESS ── */}
@@ -141,13 +122,13 @@ const Admission = () => {
                 <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
                   <CheckCircle size={40} className="text-green-500" />
                 </div>
-                <img src="/assets/Badge.jpg" alt="PHIS" className="w-16 h-16 rounded-xl object-cover mx-auto mb-4 shadow-md" />
+                <img src="/assets/phislogoremovebg.png" alt="PHIS" className="w-20 h-20 object-contain mx-auto mb-4" />
                 <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-3">Application Received!</h2>
                 <p className="text-gray-500 dark:text-gray-400 max-w-sm mx-auto leading-relaxed">
                   Thank you for applying to Peter Harvard INT'L School. We will review your application and reach out to you shortly.
                 </p>
-                <div className="mt-8 p-4 bg-secondary/10 border border-secondary/20 rounded-2xl text-sm text-secondary font-semibold">
-                  📞 For enquiries call: 08182277020 · 08033570685
+                <div className="mt-8 p-4 bg-secondary/10 border border-secondary/20 rounded-2xl text-sm text-secondary font-semibold flex items-center justify-center gap-2">
+                  <PhoneCall size={16} /> For enquiries call: 08182277020 · 08033570685
                 </div>
               </motion.div>
             )}
@@ -160,10 +141,10 @@ const Admission = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.3 }}
-                className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800 overflow-hidden"
+                className="bg-white dark:bg-gray-900 rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800 overflow-hidden"
               >
                 <FormHeader />
-                <div className="p-8 space-y-6">
+                <div className="p-5 sm:p-8 space-y-6">
                   <div className="flex items-center justify-between">
                     <h3 className="font-extrabold text-gray-900 dark:text-white text-lg">Review Your Application</h3>
                     <span className="text-xs bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 font-bold px-3 py-1 rounded-full">Preview</span>
@@ -222,11 +203,11 @@ const Admission = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.4 }}
-                className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800 overflow-hidden"
+                className="bg-white dark:bg-gray-900 rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800 overflow-hidden"
               >
                 <FormHeader />
 
-                <form onSubmit={handlePreview} className="p-8 space-y-8">
+                <form onSubmit={handlePreview} className="p-5 sm:p-8 space-y-6">
 
                   {/* Student Info */}
                   <div>
@@ -346,7 +327,6 @@ const Admission = () => {
           </AnimatePresence>
         </div>
       </section>
-
     </div>
   );
 };

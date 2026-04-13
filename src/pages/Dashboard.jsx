@@ -5,7 +5,7 @@ import {
   Images, BookOpen, LogOut, Upload, Trash2, Plus, X,
   CheckCircle, AlertCircle, Eye, LayoutDashboard, TrendingUp,
   FileText, Download, Pencil, Save, ChevronDown, ChevronUp, Megaphone,
-  GripVertical,
+  GripVertical, Menu, ArrowRight, MessageSquare, Mail, MailOpen, Send, Users,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../lib/auth';
@@ -491,40 +491,6 @@ const TickerTab = ({ toast }) => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      {/* Add new */}
-      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-sm">
-        <h3 className="font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
-          <Megaphone size={18} className="text-green-500" /> Ticker Announcements
-        </h3>
-        <p className="text-xs text-gray-400 mb-5">These scroll across the green ticker bar on the site.</p>
-        <form onSubmit={handleAdd} className="flex gap-2 mb-6">
-          <input
-            value={newText}
-            onChange={e => setNewText(e.target.value)}
-            placeholder="e.g. Term 2 Results Out Now!"
-            className={inputClass + ' flex-1'}
-          />
-          <motion.button type="submit" disabled={saving} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-            className="bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white font-bold px-4 py-2 rounded-xl transition-colors flex items-center gap-1.5 text-sm whitespace-nowrap">
-            {saving ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Plus size={15} /> Add</>}
-          </motion.button>
-        </form>
-
-        {/* Live preview */}
-        <div className="rounded-xl overflow-hidden bg-green-600 py-2.5 px-4">
-          <p className="text-white/60 text-[10px] font-bold uppercase tracking-widest mb-1.5">Live Preview</p>
-          <div className="flex gap-6 overflow-hidden">
-            {items.slice(0, 4).map((item, i) => (
-              <span key={i} className="flex items-center gap-2 text-white font-bold text-xs uppercase tracking-widest whitespace-nowrap">
-                <span className="w-1.5 h-1.5 rounded-full bg-white/60 shrink-0" />
-                {item.text}
-              </span>
-            ))}
-            {items.length > 4 && <span className="text-white/50 text-xs">+{items.length - 4} more</span>}
-          </div>
-        </div>
-      </div>
-
       {/* Items list */}
       <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-sm">
         <h3 className="font-bold text-gray-900 dark:text-white mb-5">{items.length} Item{items.length !== 1 ? 's' : ''}</h3>
@@ -544,6 +510,44 @@ const TickerTab = ({ toast }) => {
               ))}
             </div>
         }
+      </div>
+
+      {/* Add new + preview */}
+      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-sm">
+        <h3 className="font-bold text-gray-900 dark:text-white mb-1">
+          Ticker Announcements
+        </h3>
+        <p className="text-xs text-gray-400 mb-5">These scroll across the green ticker bar on the site.</p>
+        <form onSubmit={handleAdd} className="flex gap-2 mb-6">
+          <input
+            value={newText}
+            onChange={e => setNewText(e.target.value)}
+            placeholder="e.g. Term 2 Results Out Now!"
+            className={inputClass + ' flex-1'}
+          />
+          <motion.button type="submit" disabled={saving} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+            className="bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white font-bold px-4 py-2 rounded-xl transition-colors flex items-center gap-1.5 text-sm whitespace-nowrap">
+            {saving ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Plus size={15} /> Add</>}
+          </motion.button>
+        </form>
+
+        {/* Live preview */}
+        <div className="rounded-xl overflow-hidden bg-green-600">
+          <p className="text-white/60 text-[10px] font-bold uppercase tracking-widest px-4 pt-2.5 pb-1">Live Preview</p>
+          <div className="relative overflow-hidden py-2 px-4">
+            {items.length === 0
+              ? <span className="text-white/50 text-xs">Add items to see preview</span>
+              : <div className="flex gap-8 animate-ticker whitespace-nowrap">
+                  {[...items, ...items, ...items].map((item, i) => (
+                    <span key={i} className="inline-flex items-center gap-2 text-white font-bold text-xs uppercase tracking-widest shrink-0">
+                      <span className="w-1.5 h-1.5 rounded-full bg-white/60" />
+                      {item.text}
+                    </span>
+                  ))}
+                </div>
+            }
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -573,7 +577,7 @@ const TickerItemRow = ({ item, idx, total, onDelete, onEdit, onMove }) => {
 };
 
 // ── Overview Tab ─────────────────────────────────────────────
-const OverviewTab = () => {
+const OverviewTab = ({ onNavigate }) => {
   const [stats, setStats] = useState({ gallery: 0, posts: 0, admissions: 0 });
   const [recentPosts, setRecentPosts] = useState([]);
 
@@ -600,6 +604,26 @@ const OverviewTab = () => {
         <StatCard label="Total Content" value={stats.gallery + stats.posts} icon={TrendingUp} color="bg-emerald-500" />
       </div>
 
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        {[
+          { key: 'admissions', label: 'Admissions', icon: FileText, color: 'text-purple-500 bg-purple-50 dark:bg-purple-900/20' },
+          { key: 'gallery',    label: 'Gallery',    icon: Images,    color: 'text-secondary bg-red-50 dark:bg-red-900/20' },
+          { key: 'blog',       label: 'Blog Posts', icon: BookOpen,  color: 'text-blue-500 bg-blue-50 dark:bg-blue-900/20' },
+          { key: 'ticker',     label: 'Ticker',     icon: Megaphone, color: 'text-green-600 bg-green-50 dark:bg-green-900/20' },
+        ].map(({ key, label, icon: Icon, color }) => (
+          <button key={key} onClick={() => onNavigate(key)}
+            className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-4 shadow-sm flex items-center justify-between hover:border-gray-300 dark:hover:border-gray-600 transition-colors group text-left">
+            <div className="flex items-center gap-3">
+              <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${color}`}>
+                <Icon size={16} />
+              </div>
+              <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">{label}</span>
+            </div>
+            <ArrowRight size={14} className="text-gray-300 group-hover:text-gray-500 transition-colors" />
+          </button>
+        ))}
+      </div>
+
       <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-sm">
         <h3 className="font-bold text-gray-900 dark:text-white mb-5">Recent Posts</h3>
         {recentPosts.length === 0
@@ -621,12 +645,255 @@ const OverviewTab = () => {
   );
 };
 
+// ── Messages Tab ─────────────────────────────────────────────
+const MessagesTab = ({ toast, onRead }) => {
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [expanded, setExpanded] = useState(null);
+
+  const fetchMessages = async () => {
+    setLoading(true);
+    const { data } = await supabase.from('messages').select('*').order('created_at', { ascending: false });
+    if (data) setMessages(data);
+    setLoading(false);
+  };
+
+  useEffect(() => { fetchMessages(); }, []);
+
+  const markRead = async (id) => {
+    await supabase.from('messages').update({ read: true }).eq('id', id);
+    setMessages(prev => {
+      const updated = prev.map(m => m.id === id ? { ...m, read: true } : m);
+      const remaining = updated.filter(m => !m.read).length;
+      onRead?.(remaining);
+      return updated;
+    });
+  };
+
+  const handleDelete = async (msg) => {
+    if (!confirm(`Delete message from "${msg.name}"?`)) return;
+    await supabase.from('messages').delete().eq('id', msg.id);
+    toast('Message deleted', 'success');
+    fetchMessages();
+  };
+
+  const unread = messages.filter(m => !m.read).length;
+
+  if (loading) return <p className="text-gray-400 text-sm text-center py-16">Loading messages…</p>;
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-3">
+        <h3 className="font-bold text-gray-900 dark:text-white">{messages.length} Message{messages.length !== 1 ? 's' : ''}</h3>
+        {unread > 0 && (
+          <span className="bg-secondary text-white text-xs font-bold px-2 py-0.5 rounded-full">{unread} unread</span>
+        )}
+      </div>
+
+      {messages.length === 0
+        ? <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-16 text-center">
+            <MessageSquare size={36} className="text-gray-300 mx-auto mb-3" />
+            <p className="text-gray-400 text-sm">No messages yet.</p>
+          </div>
+        : messages.map(msg => (
+          <div key={msg.id} className={`bg-white dark:bg-gray-900 rounded-2xl border shadow-sm overflow-hidden transition-colors ${
+            msg.read ? 'border-gray-100 dark:border-gray-800' : 'border-secondary/30 dark:border-secondary/30'
+          }`}>
+            <div className="flex items-center gap-4 p-5">
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                msg.read ? 'bg-gray-100 dark:bg-gray-800' : 'bg-secondary/10'
+              }`}>
+                {msg.read
+                  ? <MailOpen size={18} className="text-gray-400" />
+                  : <Mail size={18} className="text-secondary" />
+                }
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <p className="font-bold text-gray-900 dark:text-white text-sm truncate">{msg.name}</p>
+                  {!msg.read && <span className="w-2 h-2 rounded-full bg-secondary flex-shrink-0" />}
+                </div>
+                <p className="text-xs text-gray-400 truncate">{msg.email} · {msg.subject}</p>
+              </div>
+              <p className="text-xs text-gray-400 hidden sm:block flex-shrink-0">
+                {new Date(msg.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+              </p>
+              <div className="flex items-center gap-1 flex-shrink-0">
+                <button
+                  onClick={() => { setExpanded(expanded === msg.id ? null : msg.id); if (!msg.read) markRead(msg.id); }}
+                  className="p-2 text-gray-400 hover:text-gray-600 rounded-lg transition-colors"
+                >
+                  {expanded === msg.id ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+                </button>
+                <button onClick={() => handleDelete(msg)} className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
+                  <Trash2 size={15} />
+                </button>
+              </div>
+            </div>
+
+            {expanded === msg.id && (
+              <div className="border-t border-gray-100 dark:border-gray-800 p-5 bg-gray-50 dark:bg-gray-800/50 space-y-3">
+                <div>
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Subject</p>
+                  <p className="text-sm text-gray-800 dark:text-gray-200 font-semibold">{msg.subject}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Message</p>
+                  <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">{msg.message}</p>
+                </div>
+                <a
+                  href={`mailto:${msg.email}?subject=Re: ${encodeURIComponent(msg.subject)}`}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-secondary hover:text-red-700 transition-colors"
+                >
+                  <Mail size={13} /> Reply via Email
+                </a>
+              </div>
+            )}
+          </div>
+        ))
+      }
+    </div>
+  );
+};
+
+// ── Newsletter Tab ─────────────────────────────────────────────
+const NewsletterTab = ({ toast }) => {
+  const [subscribers, setSubscribers] = useState([]);
+  const [sends, setSends] = useState([]);
+  const [form, setForm] = useState({ subject: '', body: '' });
+  const [sending, setSending] = useState(false);
+
+  const fetchData = async () => {
+    const [{ data: subs }, { data: sent }] = await Promise.all([
+      supabase.from('newsletter_subscribers').select('*').order('subscribed_at', { ascending: false }),
+      supabase.from('newsletter_sends').select('*').order('sent_at', { ascending: false }).limit(10),
+    ]);
+    if (subs) setSubscribers(subs);
+    if (sent) setSends(sent);
+  };
+
+  useEffect(() => { fetchData(); }, []);
+
+  const handleSend = async (e) => {
+    e.preventDefault();
+    if (subscribers.length === 0) return toast('No subscribers yet', 'error');
+    if (!confirm(`Send to ${subscribers.length} subscriber${subscribers.length !== 1 ? 's' : ''}?`)) return;
+    setSending(true);
+    try {
+      const { error } = await supabase.from('newsletter_sends').insert({
+        subject: form.subject,
+        body: form.body,
+        recipient_count: subscribers.length,
+      });
+      if (error) throw error;
+      toast(`Newsletter sent to ${subscribers.length} subscriber${subscribers.length !== 1 ? 's' : ''}!`, 'success');
+      setForm({ subject: '', body: '' });
+      fetchData();
+    } catch (err) {
+      toast(err.message || 'Failed to send', 'error');
+    }
+    setSending(false);
+  };
+
+  const handleDeleteSub = async (id) => {
+    await supabase.from('newsletter_subscribers').delete().eq('id', id);
+    toast('Subscriber removed', 'success');
+    fetchData();
+  };
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+      {/* Compose */}
+      <div className="lg:col-span-3 space-y-6">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-sm">
+          <h3 className="font-bold text-gray-900 dark:text-white mb-5 flex items-center gap-2">
+            <Send size={16} className="text-secondary" /> Compose Newsletter
+          </h3>
+          <form onSubmit={handleSend} className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Subject</label>
+              <input value={form.subject} onChange={e => setForm({ ...form, subject: e.target.value })} required placeholder="e.g. Term 2 Newsletter" className={inputClass} />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Message Body</label>
+              <textarea value={form.body} onChange={e => setForm({ ...form, body: e.target.value })} required rows={8} placeholder="Write your newsletter content here..." className={`${inputClass} resize-none`} />
+            </div>
+            <div className="flex items-center justify-between pt-1">
+              <p className="text-xs text-gray-400">
+                Will be sent to <span className="font-bold text-gray-700 dark:text-gray-300">{subscribers.length}</span> subscriber{subscribers.length !== 1 ? 's' : ''}
+              </p>
+              <motion.button type="submit" disabled={sending} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                className="bg-secondary hover:bg-red-700 disabled:opacity-60 text-white font-bold px-6 py-2.5 rounded-xl transition-colors flex items-center gap-2 text-sm shadow-md shadow-red-500/20">
+                {sending ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Send size={14} /> Send Newsletter</>}
+              </motion.button>
+            </div>
+          </form>
+        </div>
+
+        {/* Send history */}
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-sm">
+          <h3 className="font-bold text-gray-900 dark:text-white mb-4">Send History</h3>
+          {sends.length === 0
+            ? <p className="text-gray-400 text-sm text-center py-8">No newsletters sent yet.</p>
+            : <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
+                {sends.map(s => (
+                  <div key={s.id} className="flex items-center justify-between p-3 rounded-xl border border-gray-100 dark:border-gray-800">
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{s.subject}</p>
+                      <p className="text-xs text-gray-400 mt-0.5">{new Date(s.sent_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })} · {s.recipient_count} recipients</p>
+                    </div>
+                    <span className="text-xs bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 font-bold px-2 py-0.5 rounded-full flex-shrink-0 ml-3">Sent</span>
+                  </div>
+                ))}
+              </div>
+          }
+        </div>
+      </div>
+
+      {/* Subscribers list */}
+      <div className="lg:col-span-2">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-sm">
+          <h3 className="font-bold text-gray-900 dark:text-white mb-5 flex items-center justify-between">
+            <span className="flex items-center gap-2"><Users size={16} className="text-blue-500" /> {subscribers.length} Subscriber{subscribers.length !== 1 ? 's' : ''}</span>
+          </h3>
+          {subscribers.length === 0
+            ? <p className="text-gray-400 text-sm text-center py-12">No subscribers yet.</p>
+            : <div className="space-y-2 max-h-[520px] overflow-y-auto pr-1">
+                {subscribers.map(sub => (
+                  <div key={sub.id} className="flex items-center justify-between p-3 rounded-xl border border-gray-100 dark:border-gray-800 hover:border-gray-200 dark:hover:border-gray-700 transition-colors">
+                    <div className="min-w-0">
+                      <p className="text-sm text-gray-800 dark:text-gray-200 font-medium truncate">{sub.email}</p>
+                      <p className="text-xs text-gray-400 mt-0.5">{new Date(sub.subscribed_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                    </div>
+                    <button onClick={() => handleDeleteSub(sub.id)} className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors flex-shrink-0 ml-2">
+                      <Trash2 size={13} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+          }
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // ── Dashboard ────────────────────────────────────────────────
 const Dashboard = () => {
   const { authed, logout } = useAuth();
   const navigate = useNavigate();
   const [tab, setTab] = useState('overview');
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [toastMsg, setToastMsg] = useState(null);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    const fetchUnread = async () => {
+      const { count } = await supabase.from('messages').select('*', { count: 'exact', head: true }).eq('read', false);
+      setUnreadCount(count || 0);
+    };
+    fetchUnread();
+  }, [tab]);
 
   const toast = (msg, type = 'success') => {
     setToastMsg({ msg, type });
@@ -636,65 +903,135 @@ const Dashboard = () => {
   if (!authed) { navigate('/'); return null; }
 
   const tabs = [
-    { key: 'overview', icon: LayoutDashboard, label: 'Overview' },
-    { key: 'admissions', icon: FileText, label: 'Admissions' },
-    { key: 'gallery', icon: Images, label: 'Gallery' },
-    { key: 'blog', icon: BookOpen, label: 'Blog Posts' },
-    { key: 'ticker', icon: Megaphone, label: 'Ticker' },
+    { key: 'overview',   icon: LayoutDashboard, label: 'Overview' },
+    { key: 'admissions', icon: FileText,         label: 'Admissions' },
+    { key: 'gallery',    icon: Images,           label: 'Gallery' },
+    { key: 'blog',       icon: BookOpen,         label: 'Blog Posts' },
+    { key: 'ticker',     icon: Megaphone,        label: 'Ticker' },
+    { key: 'messages',   icon: MessageSquare,    label: 'Messages' },
+    { key: 'newsletter',  icon: Send,             label: 'Newsletter' },
   ];
 
-  return (
-    <div className="pt-20 min-h-screen bg-gray-50 dark:bg-gray-950">
-      {/* Header */}
-      <div className="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 sticky top-16 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14">
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2.5">
-                <img src="/assets/Badge.jpg" className="w-7 h-7 rounded-lg object-cover" />
-                <span className="font-extrabold text-gray-900 dark:text-white text-sm hidden sm:block">Admin Dashboard</span>
-              </div>
-              <div className="flex gap-1">
-                {tabs.map(({ key, icon: Icon, label }) => (
-                  <button
-                    key={key}
-                    onClick={() => setTab(key)}
-                    className={`flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all ${tab === key ? 'bg-secondary text-white shadow-md shadow-red-500/20' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'}`}
-                  >
-                    <Icon size={14} /> <span className="hidden sm:inline">{label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <button onClick={() => window.open('/', '_blank')} className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-secondary transition-colors font-semibold">
-                <Eye size={14} /> <span className="hidden sm:inline">View Site</span>
-              </button>
-              <button onClick={() => { logout(); navigate('/'); }} className="flex items-center gap-1.5 text-xs text-red-400 hover:text-red-600 transition-colors font-semibold">
-                <LogOut size={14} /> <span className="hidden sm:inline">Logout</span>
-              </button>
-            </div>
+  const tabLabels = { overview: 'Overview', admissions: 'Admissions', gallery: 'Gallery', blog: 'Blog Posts', ticker: 'Ticker', messages: 'Messages', newsletter: 'Newsletter' };
+
+  const Sidebar = () => (
+    <aside className="flex flex-col w-60 shrink-0 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 h-[calc(100vh-7.5rem)] sticky top-[7.5rem] overflow-y-auto">
+      {/* Brand */}
+      <div className="px-5 py-5 border-b border-gray-100 dark:border-gray-800">
+        <div className="flex items-center gap-3">
+          <img src="/assets/Badge.jpg" className="w-14 h-14 rounded-2xl object-cover shadow-md" />
+          <div>
+            <p className="font-extrabold text-gray-900 dark:text-white text-sm leading-tight">Admin Panel</p>
+            <p className="text-[11px] text-gray-400 font-medium">Peter Harvard Int'l</p>
           </div>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={tab}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.2 }}
+      {/* Nav */}
+      <nav className="flex-1 px-3 py-4 space-y-1">
+        {tabs.map(({ key, icon: Icon, label }) => (
+          <button
+            key={key}
+            onClick={() => { setTab(key); }}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+              tab === key
+                ? 'bg-secondary text-white shadow-md shadow-red-500/20'
+                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
+            }`}
           >
-            {tab === 'overview' && <OverviewTab />}
-            {tab === 'admissions' && <AdmissionsTab toast={toast} />}
-            {tab === 'gallery' && <GalleryTab toast={toast} />}
-            {tab === 'blog' && <BlogTab toast={toast} />}
-            {tab === 'ticker' && <TickerTab toast={toast} />}
-          </motion.div>
+            <Icon size={16} />
+            {label}
+            {key === 'messages' && unreadCount > 0 && (
+              <span className="ml-auto bg-secondary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">{unreadCount}</span>
+            )}
+          </button>
+        ))}
+      </nav>
+
+      {/* Footer actions */}
+      <div className="px-3 py-4 border-t border-gray-100 dark:border-gray-800 space-y-1">
+        <button
+          onClick={() => window.open('/', '_blank')}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-all"
+        >
+          <Eye size={16} /> View Site
+        </button>
+        <button
+          onClick={() => { logout(); navigate('/'); }}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 transition-all"
+        >
+          <LogOut size={16} /> Logout
+        </button>
+      </div>
+    </aside>
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col pt-0">
+
+      {/* Top bar — full width, sits right below the site navbar */}
+      <header className="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 sticky top-0 z-30 h-14 flex items-center px-4 sm:px-6 gap-4">
+        <button
+          onClick={() => setSidebarOpen(o => !o)}
+          className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        >
+          <Menu size={18} />
+        </button>
+        <h1 className="font-extrabold text-gray-900 dark:text-white text-sm">{tabLabels[tab]}</h1>
+        <div className="ml-auto flex items-center gap-2">
+          <button
+            onClick={() => window.open('/', '_blank')}
+            className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-secondary transition-colors font-semibold px-2 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <Eye size={14} /> <span className="hidden sm:inline">View Site</span>
+          </button>
+          <button
+            onClick={() => { logout(); navigate('/'); }}
+            className="flex items-center gap-1.5 text-xs text-red-400 hover:text-red-600 transition-colors font-semibold px-2 py-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
+          >
+            <LogOut size={14} /> <span className="hidden sm:inline">Logout</span>
+          </button>
+        </div>
+      </header>
+
+      {/* Body row */}
+      <div className="flex flex-1 min-h-0">
+
+        {/* Sidebar — toggleable on all screen sizes */}
+        <AnimatePresence initial={false}>
+          {sidebarOpen && (
+            <motion.div
+              initial={{ width: 0, opacity: 0 }}
+              animate={{ width: 240, opacity: 1 }}
+              exit={{ width: 0, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              className="overflow-hidden shrink-0"
+            >
+              <Sidebar />
+            </motion.div>
+          )}
         </AnimatePresence>
+
+        {/* Main content */}
+        <main className="flex-1 px-4 sm:px-6 lg:px-8 pt-5 pb-8 overflow-y-auto">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={tab}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.18 }}
+            >
+              {tab === 'overview'   && <OverviewTab onNavigate={setTab} />}
+              {tab === 'admissions' && <AdmissionsTab toast={toast} />}
+              {tab === 'gallery'    && <GalleryTab toast={toast} />}
+              {tab === 'blog'       && <BlogTab toast={toast} />}
+              {tab === 'ticker'     && <TickerTab toast={toast} />}
+              {tab === 'messages'   && <MessagesTab toast={toast} onRead={(n) => setUnreadCount(n)} />}
+              {tab === 'newsletter' && <NewsletterTab toast={toast} />}
+            </motion.div>
+          </AnimatePresence>
+        </main>
       </div>
 
       <AnimatePresence>

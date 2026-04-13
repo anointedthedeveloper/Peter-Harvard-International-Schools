@@ -1,5 +1,41 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Mail, Phone, MapPin } from 'lucide-react';
+import { Facebook, Instagram, Mail, Phone, MapPin, Send } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+
+const FooterNewsletter = () => {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState(null);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus('loading');
+    const { error } = await supabase.from('newsletter_subscribers').insert({ email: email.trim() });
+    if (error) {
+      setStatus(error.code === '23505' ? 'already' : 'error');
+    } else {
+      setStatus('success');
+      setEmail('');
+    }
+    setTimeout(() => setStatus(null), 4000);
+  };
+
+  return (
+    <form className="space-y-2" onSubmit={handleSubmit}>
+      <input
+        type="email" required value={email} onChange={e => setEmail(e.target.value)}
+        placeholder="Your email address"
+        className="w-full px-4 py-2.5 text-sm bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary dark:text-white transition-all"
+      />
+      <button disabled={status === 'loading'} className="w-full bg-secondary hover:bg-red-700 disabled:opacity-60 text-white font-bold py-2.5 rounded-lg transition-colors text-sm shadow-md shadow-red-500/20 flex items-center justify-center gap-2">
+        {status === 'loading' ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Send size={13} /> Subscribe</>}
+      </button>
+      {status === 'success' && <p className="text-green-600 text-xs font-semibold">You're subscribed!</p>}
+      {status === 'already' && <p className="text-yellow-600 text-xs font-semibold">Already subscribed.</p>}
+      {status === 'error' && <p className="text-red-500 text-xs font-semibold">Something went wrong.</p>}
+    </form>
+  );
+};
 
 const Footer = () => {
   return (
@@ -13,7 +49,7 @@ const Footer = () => {
               <img src="/assets/Badge.jpg" alt="PHIS" className="w-10 h-10 rounded-xl object-cover shadow" />
               <div className="leading-tight">
                 <p className="font-extrabold text-secondary dark:text-white text-base">Peter Harvard</p>
-                <p className="text-xs text-gray-400 uppercase tracking-widest">Int'l Schools</p>
+                <p className="text-xs text-green-600 dark:text-green-500 font-semibold uppercase tracking-widest">International Schools</p>
               </div>
             </Link>
             <p className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
@@ -86,16 +122,7 @@ const Footer = () => {
           <div>
             <h3 className="text-xs font-bold mb-5 text-gray-900 dark:text-white uppercase tracking-widest">Newsletter</h3>
             <p className="text-sm mb-4 text-gray-500 dark:text-gray-400">Subscribe for latest updates and news.</p>
-            <form className="space-y-2" onSubmit={e => e.preventDefault()}>
-              <input
-                type="email"
-                placeholder="Your email address"
-                className="w-full px-4 py-2.5 text-sm bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary dark:text-white transition-all"
-              />
-              <button className="w-full bg-secondary hover:bg-red-700 text-white font-bold py-2.5 rounded-lg transition-colors text-sm shadow-md shadow-red-500/20">
-                Subscribe
-              </button>
-            </form>
+            <FooterNewsletter />
           </div>
         </div>
 

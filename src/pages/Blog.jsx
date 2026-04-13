@@ -94,7 +94,7 @@ const Blog = () => {
   });
 
   return (
-    <div className="pt-20 overflow-x-hidden bg-white dark:bg-gray-950">
+    <div className="pt-16 overflow-x-hidden bg-white dark:bg-gray-950">
 
       {/* ── Hero ── */}
       <section className="relative h-[65vh] flex items-center justify-center overflow-hidden">

@@ -1,8 +1,45 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ChevronRight, Award, Users, BookOpen, Globe, Calendar, ChevronLeft } from 'lucide-react';
+import { ChevronRight, Award, Users, BookOpen, Globe, Calendar, ChevronLeft, Send } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+
+const NewsletterForm = () => {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState(null); // null | 'loading' | 'success' | 'error'
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus('loading');
+    const { error } = await supabase.from('newsletter_subscribers').insert({ email: email.trim() });
+    if (error) {
+      setStatus(error.code === '23505' ? 'already' : 'error');
+    } else {
+      setStatus('success');
+      setEmail('');
+    }
+    setTimeout(() => setStatus(null), 4000);
+  };
+
+  return (
+    <div className="max-w-md mx-auto">
+      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2.5">
+        <input
+          type="email" required value={email} onChange={e => setEmail(e.target.value)}
+          placeholder="Your email address"
+          className="flex-1 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary text-sm dark:text-white transition-all"
+        />
+        <motion.button type="submit" disabled={status === 'loading'} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+          className="bg-secondary hover:bg-red-700 disabled:opacity-60 text-white font-bold px-5 py-3 rounded-xl transition-colors flex items-center justify-center gap-2 text-sm shadow-md shadow-red-500/20 whitespace-nowrap">
+          {status === 'loading' ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Send size={14} /> Subscribe</>}
+        </motion.button>
+      </form>
+      {status === 'success' && <p className="text-green-600 text-xs font-semibold mt-2 text-center">You're subscribed!</p>}
+      {status === 'already' && <p className="text-yellow-600 text-xs font-semibold mt-2 text-center">Already subscribed.</p>}
+      {status === 'error' && <p className="text-red-500 text-xs font-semibold mt-2 text-center">Something went wrong.</p>}
+    </div>
+  );
+};
 
 const heroSlides = [
   {
@@ -96,19 +133,17 @@ const BlogSection = () => {
   if (!loading && posts.length === 0) return null;
 
   return (
-    <section className="py-24 md:py-32 bg-gray-50/50 dark:bg-gray-900/50 relative overflow-hidden">
+    <section className="py-14 md:py-24 lg:py-32 bg-gray-50/50 dark:bg-gray-900/50 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <motion.div {...fadeUp} className="flex flex-col md:flex-row justify-between items-center md:items-end mb-16 gap-6 text-center md:text-left">
+        <motion.div {...fadeUp} className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 md:mb-16 gap-4">
           <div>
-            <span className="text-secondary text-xs font-bold uppercase tracking-[0.3em] mb-4 block">Stay Updated</span>
-            <h2 className="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-4 tracking-tight">Latest News & Events</h2>
-            <p className="text-gray-500 dark:text-gray-400 text-lg font-medium">Keep up with the heartbeat of Peter Harvard.</p>
+            <span className="text-secondary text-xs font-bold uppercase tracking-[0.3em] mb-3 block">Stay Updated</span>
+            <h2 className="text-3xl md:text-5xl font-black text-gray-900 dark:text-white mb-2 tracking-tight">Latest News & Events</h2>
+            <p className="text-gray-500 dark:text-gray-400 text-base font-medium">Keep up with the heartbeat of Peter Harvard.</p>
           </div>
-          <motion.div whileHover={{ x: 6 }} transition={{ type: 'spring', stiffness: 400 }}>
-            <Link to="/blog" className="bg-white dark:bg-gray-950 hover:bg-secondary hover:text-white dark:hover:bg-secondary text-gray-900 dark:text-white px-8 py-4 rounded-2xl font-bold transition-all border border-gray-200 dark:border-gray-800 hover:border-secondary shadow-sm inline-flex items-center gap-2">
-              Read All News <ChevronRight size={20} />
-            </Link>
-          </motion.div>
+          <Link to="/blog" className="bg-white dark:bg-gray-950 hover:bg-secondary hover:text-white dark:hover:bg-secondary text-gray-900 dark:text-white px-6 py-3 rounded-xl font-bold transition-all border border-gray-200 dark:border-gray-800 hover:border-secondary shadow-sm inline-flex items-center gap-2 text-sm flex-shrink-0">
+            Read All News <ChevronRight size={16} />
+          </Link>
         </motion.div>
 
         {loading ? (
@@ -190,7 +225,10 @@ const Home = () => {
     <div className="overflow-x-hidden bg-white dark:bg-gray-950">
 
       {/* ── Hero Slideshow ── */}
-      <section className="relative h-screen min-h-[600px] overflow-hidden">
+      <section className="relative h-[55vh] sm:h-[70vh] lg:h-screen min-h-[360px] overflow-hidden">
+
+        {/* Overlay gradient for readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/20 z-10" />
 
         {/* Full-bleed slide images */}
         {heroSlides.map((slide, i) => (
@@ -200,19 +238,19 @@ const Home = () => {
             animate={{ opacity: i === currentSlide ? 1 : 0 }}
             transition={{ duration: 0.8 }}
           >
-            <img src={slide.image} alt="" className="w-full h-full object-cover" />
+            <img src={slide.image} alt="" className="w-full h-full object-cover object-center" />
           </motion.div>
         ))}
 
         {/* Text + controls overlay */}
-        <div className="absolute inset-0 flex flex-col justify-end px-6 sm:px-12 md:px-20 pb-16 pt-16">
-          <div className="max-w-3xl">
+        <div className="absolute inset-0 z-20 flex flex-col justify-end px-5 sm:px-10 md:px-20 pb-10 sm:pb-14">
+          <div className="max-w-2xl">
             <motion.h1
               key={`title-${currentSlide}`}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-white mb-3 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"
+              className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-white mb-2 sm:mb-3"
             >
               {heroSlides[currentSlide].title}{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-300">
@@ -224,41 +262,41 @@ const Home = () => {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.1 }}
-              className="text-sm md:text-base text-white mb-6 max-w-xl leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]"
+              className="text-xs sm:text-sm md:text-base text-white/90 mb-4 sm:mb-6 max-w-lg leading-relaxed hidden sm:block"
             >
               {heroSlides[currentSlide].desc}
             </motion.p>
-            <div className="flex flex-row items-center gap-3 mb-8">
-              <Link to="/admission" className="flex items-center gap-2 bg-secondary hover:bg-red-700 text-white px-5 py-2.5 rounded-xl font-bold transition-all shadow-lg text-sm">
-                Apply Now <ChevronRight size={15} />
+            <div className="flex items-center gap-2 sm:gap-3 mb-6 sm:mb-8">
+              <Link to="/admission" className="flex items-center gap-1.5 bg-secondary hover:bg-red-700 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold transition-all shadow-lg text-xs sm:text-sm">
+                Apply Now <ChevronRight size={14} />
               </Link>
-              <Link to="/portal" className="flex items-center gap-2 bg-white/15 backdrop-blur-sm hover:bg-white/25 text-white px-5 py-2.5 rounded-xl font-bold transition-all text-sm border border-white/20">
+              <Link to="/portal" className="flex items-center gap-1.5 bg-white/15 backdrop-blur-sm hover:bg-white/25 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold transition-all text-xs sm:text-sm border border-white/20">
                 Visit Portal
               </Link>
             </div>
           </div>
 
           {/* Dot + arrow controls */}
-          <div className="flex items-center gap-4">
-            <button onClick={prevSlide} className="w-9 h-9 flex items-center justify-center rounded-full bg-white/15 backdrop-blur-sm text-white hover:bg-white/30 transition-all">
-              <ChevronLeft size={18} />
+          <div className="flex items-center gap-3">
+            <button onClick={prevSlide} className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-white/15 backdrop-blur-sm text-white hover:bg-white/30 transition-all">
+              <ChevronLeft size={16} />
             </button>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               {heroSlides.map((_, i) => (
                 <button key={i} onClick={() => setCurrentSlide(i)}
-                  className={`h-2 transition-all duration-500 rounded-full ${i === currentSlide ? 'w-7 bg-white' : 'w-2 bg-white/40 hover:bg-white/60'}`}
+                  className={`h-1.5 transition-all duration-500 rounded-full ${i === currentSlide ? 'w-6 bg-white' : 'w-1.5 bg-white/40 hover:bg-white/60'}`}
                 />
               ))}
             </div>
-            <button onClick={nextSlide} className="w-9 h-9 flex items-center justify-center rounded-full bg-white/15 backdrop-blur-sm text-white hover:bg-white/30 transition-all">
-              <ChevronRight size={18} />
+            <button onClick={nextSlide} className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-white/15 backdrop-blur-sm text-white hover:bg-white/30 transition-all">
+              <ChevronRight size={16} />
             </button>
           </div>
         </div>
       </section>
 
       {/* ── About Preview ── */}
-      <section className="py-24 md:py-32 bg-white dark:bg-gray-950 relative overflow-hidden">
+      <section className="py-14 md:py-24 lg:py-32 bg-white dark:bg-gray-950 relative overflow-hidden">
         {/* Subtle background element */}
         <div className="absolute -top-24 -left-24 w-96 h-96 bg-secondary/5 rounded-full blur-3xl" />
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-red-500/5 rounded-full blur-3xl" />
@@ -351,7 +389,7 @@ const Home = () => {
       </section>
 
       {/* ── Why PHIS ── */}
-      <section className="py-24 md:py-32 bg-gray-50 dark:bg-gray-900/50 relative overflow-hidden">
+      <section className="py-14 md:py-24 lg:py-32 bg-gray-50 dark:bg-gray-900/50 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div {...fadeUp} className="text-center mb-20 max-w-3xl mx-auto">
             <span className="text-secondary text-xs font-bold uppercase tracking-[0.3em] mb-4 block">Our Strengths</span>
@@ -389,7 +427,7 @@ const Home = () => {
       </section>
 
       {/* ── School Life ── */}
-      <section className="py-24 md:py-32 bg-white dark:bg-gray-950 overflow-hidden">
+      <section className="py-14 md:py-24 lg:py-32 bg-white dark:bg-gray-950 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 relative">
           <motion.div {...fadeUp} className="flex flex-col md:flex-row justify-between items-center md:items-end mb-16 gap-6 text-center md:text-left">
             <div>
@@ -437,7 +475,7 @@ const Home = () => {
       </section>
 
       {/* ── Stats ── */}
-      <section className="py-24 md:py-32 bg-green-700 relative overflow-hidden">
+      <section className="py-14 md:py-24 bg-green-700 relative overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-br from-green-600 via-green-700 to-green-800" />
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
@@ -456,10 +494,22 @@ const Home = () => {
       {/* ── Blog / Latest News ── */}
       <BlogSection />
 
+      {/* ── Newsletter Banner ── */}
+      <section className="py-12 md:py-16 bg-gray-50 dark:bg-gray-900 border-y border-gray-100 dark:border-gray-800">
+        <div className="max-w-xl mx-auto px-4 text-center">
+          <motion.div {...fadeUp}>
+            <span className="text-secondary text-xs font-bold uppercase tracking-[0.3em] mb-3 block">Stay in the Loop</span>
+            <h2 className="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-3 tracking-tight">Get School Updates</h2>
+            <p className="text-gray-500 dark:text-gray-400 mb-8 font-medium">Subscribe for the latest news, events, and announcements from Peter Harvard.</p>
+            <NewsletterForm />
+          </motion.div>
+        </div>
+      </section>
+
       {/* ── CTA ── */}
-      <section className="py-24 md:py-32 bg-white dark:bg-gray-950 relative overflow-hidden">
+      <section className="py-14 md:py-24 lg:py-32 bg-white dark:bg-gray-950 relative overflow-hidden">
         <div className="max-w-5xl mx-auto px-4 relative z-10">
-          <div className="bg-secondary p-12 md:p-20 rounded-[3rem] shadow-[0_40px_80px_-20px_rgba(220,38,38,0.3)] relative overflow-hidden group">
+          <div className="bg-secondary p-8 sm:p-12 md:p-20 rounded-2xl sm:rounded-[3rem] shadow-[0_40px_80px_-20px_rgba(220,38,38,0.3)] relative overflow-hidden group">
             {/* Decorative background elements */}
             <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-48 -mt-48 blur-3xl group-hover:bg-white/15 transition-all duration-700" />
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/10 rounded-full -ml-48 -mb-48 blur-3xl" />
