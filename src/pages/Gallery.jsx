@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Maximize2, ChevronLeft, ChevronRight, Images } from 'lucide-react';
 import { supabase } from '../lib/supabase';
@@ -41,12 +41,12 @@ const Gallery = () => {
   return (
     <div className="pt-20 overflow-x-hidden bg-white dark:bg-gray-950">
 
-      {/* ── Hero ── */}
+      {/* â”€â”€ Hero â”€â”€ */}
       <section className="relative h-[65vh] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-950 via-gray-900 to-secondary/70" />
-        {/* Decorative orbs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-secondary/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-red-400/10 rounded-full blur-3xl" />
+        <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1600&q=70" alt="Gallery banner" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/55 to-black/70" />
+
+
 
         <motion.div
           initial={{ opacity: 0, y: 28 }}
@@ -65,7 +65,7 @@ const Gallery = () => {
         </motion.div>
       </section>
 
-      {/* ── Grid ── */}
+      {/* â”€â”€ Grid â”€â”€ */}
       <section className="py-24 md:py-32 bg-white dark:bg-gray-950 relative overflow-hidden">
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-secondary/5 rounded-full blur-3xl" />
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-red-500/5 rounded-full blur-3xl" />
@@ -156,7 +156,7 @@ const Gallery = () => {
         </div>
       </section>
 
-      {/* ── Lightbox ── */}
+      {/* â”€â”€ Lightbox â”€â”€ */}
       <AnimatePresence>
         {selectedImage && (
           <motion.div

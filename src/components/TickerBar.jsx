@@ -28,7 +28,7 @@ const TickerBar = () => {
       <motion.button
         onClick={() => setOpen(o => !o)}
         whileTap={{ scale: 0.9 }}
-        className="fixed bottom-6 right-6 z-50 w-11 h-11 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-xl flex items-center justify-center transition-colors"
+        className="fixed bottom-6 left-6 z-50 w-11 h-11 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-xl flex items-center justify-center transition-colors"
         aria-label="Toggle announcements"
       >
         <AnimatePresence mode="wait" initial={false}>

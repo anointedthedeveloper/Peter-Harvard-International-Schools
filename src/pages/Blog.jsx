@@ -1,80 +1,18 @@
 import { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { Link, useSearchParams } from 'react-router-dom';
 import { BookOpen, Calendar, Search, X, ChevronRight, Tag } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 const CACHE_TTL = 5 * 60 * 1000;
 const CATEGORIES = ['All', 'News', 'Events', 'Academics', 'Sports', 'Announcement'];
 
-const PostModal = ({ post, onClose }) => {
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    const onKey = (e) => e.key === 'Escape' && onClose();
-    window.addEventListener('keydown', onKey);
-    return () => { document.body.style.overflow = ''; window.removeEventListener('keydown', onKey); };
-  }, [onClose]);
-
-  return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={onClose}
-        className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4"
-      >
-        <motion.div
-          initial={{ opacity: 0, scale: 0.92, y: 24 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.92, y: 24 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-          onClick={e => e.stopPropagation()}
-          className="bg-white dark:bg-gray-900 rounded-[2rem] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.4)] w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-100 dark:border-gray-800"
-        >
-          {post.cover_url && (
-            <div className="relative h-64 overflow-hidden rounded-t-[2rem]">
-              <img src={post.cover_url} alt={post.title} className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-            </div>
-          )}
-          <div className="p-8">
-            <div className="flex items-center justify-between mb-5">
-              <span className="text-[10px] bg-secondary text-white font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg shadow-red-500/20">
-                {post.category}
-              </span>
-              <button
-                onClick={onClose}
-                className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              >
-                <X size={18} className="text-gray-500" />
-              </button>
-            </div>
-            <h2 className="text-2xl md:text-3xl font-black text-gray-900 dark:text-white mb-3 leading-tight tracking-tight">
-              {post.title}
-            </h2>
-            <p className="text-xs text-gray-400 flex items-center gap-1.5 mb-6 font-bold uppercase tracking-widest">
-              <Calendar size={12} className="text-secondary" />
-              {new Date(post.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
-            </p>
-            <p className="text-base text-gray-600 dark:text-gray-400 italic mb-6 border-l-4 border-secondary pl-5 leading-relaxed font-medium">
-              {post.excerpt}
-            </p>
-            <div className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
-              {post.content}
-            </div>
-          </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
-  );
-};
-
 const Blog = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [category, setCategory] = useState('All');
   const [search, setSearch] = useState('');
-  const [selected, setSelected] = useState(null);
+  const [searchParams] = useSearchParams();
+  const [category, setCategory] = useState(searchParams.get('category') || 'All');
 
   const fetchPosts = useCallback(async () => {
     const c = window.__blogCache;
@@ -98,9 +36,13 @@ const Blog = () => {
 
       {/* ── Hero ── */}
       <section className="relative h-[65vh] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-950 via-gray-900 to-secondary/70" />
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-secondary/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-red-400/10 rounded-full blur-3xl" />
+        {/* Background image — replace src with your own image */}
+        <img
+          src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1600&q=70"
+          alt="Blog banner"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/55 to-black/70" />
 
         <motion.div
           initial={{ opacity: 0, y: 28 }}
@@ -203,9 +145,10 @@ const Blog = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.07, duration: 0.5, ease: 'easeOut' }}
                   whileHover={{ y: -10, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
-                  onClick={() => setSelected(post)}
-                  className="bg-white dark:bg-gray-950 rounded-[2.5rem] overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800 hover:border-secondary/30 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 cursor-pointer group flex flex-col"
+                  onClick={() => {}} // navigation handled by Link
+                  className="bg-white dark:bg-gray-950 rounded-[2.5rem] overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800 hover:border-secondary/30 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 group flex flex-col"
                 >
+                  <Link to={`/blog/${post.id}`} className="flex flex-col flex-grow">
                   {/* Cover */}
                   <div className="relative h-56 overflow-hidden">
                     {post.cover_url
@@ -237,14 +180,13 @@ const Blog = () => {
                       Read Story <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
                     </span>
                   </div>
+                  </Link>
                 </motion.article>
               ))}
             </div>
           )}
         </div>
       </section>
-
-      {selected && <PostModal post={selected} onClose={() => setSelected(null)} />}
     </div>
   );
 };

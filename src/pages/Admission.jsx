@@ -83,7 +83,6 @@ const Admission = () => {
       setStep('success');
       scrollTop();
     } catch (err) {
-      alert(err.message || 'Submission failed. Please try again.');
       setStep('form');
     }
     setLoading(false);
