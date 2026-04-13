@@ -12,25 +12,25 @@ const heroSlides = [
     desc: 'Nurturing Excellence, Inspiring Innovation, and Building Global Leaders for Tomorrow.'
   },
   {
-    image: 'https://images.unsplash.com/photo-1523050853064-dbad3219756a?auto=format&fit=crop&w=1920&q=80',
+    image: '/assets/slideshow/hero2.png',
     title: 'Excellence in',
     subtitle: 'Academic Achievement',
     desc: 'Empowering students to reach their full potential through rigorous academic programs.'
   },
   {
-    image: 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&w=1920&q=80',
+    image: '/assets/slideshow/hero3.png',
     title: 'Holistic',
     subtitle: 'Student Development',
     desc: 'Fostering creativity, leadership, and character in a vibrant school community.'
   },
   {
-    image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1920&q=80',
+    image: '/assets/slideshow/hero4.png',
     title: 'Modern',
     subtitle: 'Learning Spaces',
     desc: 'State-of-the-art facilities designed to inspire curiosity and collaboration.'
   },
   {
-    image: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=1920&q=80',
+    image: '/assets/slideshow/hero5.png',
     title: 'Global',
     subtitle: 'Perspective',
     desc: 'Preparing students for success in an increasingly interconnected world.'
@@ -201,7 +201,6 @@ const Home = () => {
             transition={{ duration: 0.8 }}
           >
             <img src={slide.image} alt="" className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-black/40" />
           </motion.div>
         ))}
 
@@ -213,7 +212,7 @@ const Home = () => {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-white mb-3"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-white mb-3 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"
             >
               {heroSlides[currentSlide].title}{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-300">
@@ -225,7 +224,7 @@ const Home = () => {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.1 }}
-              className="text-sm md:text-base text-white/75 mb-6 max-w-xl leading-relaxed"
+              className="text-sm md:text-base text-white mb-6 max-w-xl leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]"
             >
               {heroSlides[currentSlide].desc}
             </motion.p>
@@ -452,7 +451,7 @@ const Home = () => {
         <div className="max-w-6xl mx-auto px-4 relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-8">
             <StatCard value={yearsRunning} suffix="+" label="Years of Excellence" />
-            <StatCard value={1200} suffix="+" label="Students Enrolled" />
+            <StatCard value={2000} suffix="+" label="Students Enrolled" />
             <StatCard value={150} suffix="+" label="Expert Faculty" />
             <StatCard value={100} suffix="%" label="Success Rate" />
           </div>
