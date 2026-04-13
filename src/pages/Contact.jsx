@@ -62,7 +62,7 @@ const Contact = () => {
   const inputClass = 'w-full px-5 py-4 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl focus:outline-none focus:ring-2 focus:ring-secondary transition-all dark:text-white text-sm font-medium placeholder:text-gray-400';
 
   return (
-    <div className="pt-20 overflow-x-hidden bg-white dark:bg-gray-950">
+    <div className="overflow-x-hidden bg-white dark:bg-gray-950">
 
       {/* ── Hero ── */}
       <section className="relative h-[65vh] flex items-center justify-center overflow-hidden">

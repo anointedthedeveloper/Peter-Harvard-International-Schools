@@ -30,7 +30,7 @@ const milestones = [
 
 const About = () => {
   return (
-    <div className="pt-20 overflow-x-hidden bg-white dark:bg-gray-950">
+    <div className="overflow-x-hidden bg-white dark:bg-gray-950">
 
       {/* ── Hero Cover ── */}
       <section className="relative h-[65vh] flex items-center justify-center overflow-hidden">

@@ -89,6 +89,7 @@ const Footer = () => {
                 { label: 'Gallery', path: '/gallery' },
                 { label: 'Blog', path: '/blog' },
                 { label: 'Contact Us', path: '/contact' },
+                { label: 'Apply Now', path: '/admission' },
                 { label: 'Portal', path: '/portal' },
               ].map(({ label, path }) => (
                 <li key={label}>
