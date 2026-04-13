@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Target, Eye, ShieldCheck, Heart, Users, Phone, Linkedin, MessageCircle, ChevronRight, Award, BookOpen, Globe } from 'lucide-react';
+import { Target, Eye, ShieldCheck, Heart, Users, Phone, MessageCircle, ChevronRight, Award, BookOpen, Globe } from 'lucide-react';
 
 const FOUNDED = 2017;
 const yearsRunning = new Date().getFullYear() - FOUNDED;
@@ -213,14 +213,6 @@ const About = () => {
                 >
                   <MessageCircle size={17} /> WhatsApp
                 </motion.a>
-                <motion.a
-                  href="https://ng.linkedin.com/in/dr-peter-oyedotun-agunloye"
-                  target="_blank" rel="noopener noreferrer"
-                  whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                  className="flex items-center justify-center gap-2.5 bg-[#0A66C2] hover:bg-[#0958a8] text-white font-bold py-4 px-6 rounded-2xl transition-colors shadow-lg text-sm"
-                >
-                  <Linkedin size={17} /> LinkedIn
-                </motion.a>
               </div>
             </motion.div>
 
@@ -255,17 +247,6 @@ const About = () => {
                 to raise a generation of excellence. His career spans finance, capital markets, and forensic
                 accounting — and his passion for education drives the school's commitment to holistic development.
               </p>
-
-              <div className="space-y-3">
-                <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Areas of Expertise</p>
-                <div className="flex flex-wrap gap-2">
-                  {['Economics', 'Chartered Accounting', 'Capital Markets', 'Forensic Accounting', 'Stockbroking', 'Education Leadership'].map(tag => (
-                    <span key={tag} className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs font-semibold px-3 py-1.5 rounded-xl">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
 
               <blockquote className="border-l-4 border-secondary pl-5 py-1">
                 <p className="text-gray-700 dark:text-gray-300 italic leading-relaxed text-lg">
@@ -347,6 +328,69 @@ const About = () => {
                   <h4 className="text-xl font-black mb-3 text-gray-900 dark:text-white group-hover:text-secondary transition-colors">{value.title}</h4>
                   <p className="text-sm text-gray-500 dark:text-gray-400 font-medium leading-relaxed">{value.desc}</p>
                 </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Our Team ── */}
+      <section className="py-24 md:py-32 bg-white dark:bg-gray-950 relative overflow-hidden">
+        <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-secondary/5 rounded-full blur-3xl" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div {...fadeUp} className="text-center mb-16">
+            <span className="text-secondary text-xs font-bold uppercase tracking-[0.3em] mb-4 block">The People Behind PHIS</span>
+            <h2 className="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-4 tracking-tight">Our Team</h2>
+            <div className="w-16 h-1 bg-secondary mx-auto rounded-full" />
+          </motion.div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Founder card */}
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
+              whileHover={{ y: -8, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
+              className="group flex flex-col items-center text-center cursor-default"
+            >
+              <div className="w-full aspect-[3/4] overflow-hidden rounded-[2rem] mb-4 shadow-xl relative">
+                <img
+                  src="/assets/Drpeter.png"
+                  alt="Dr. Peter Oyedotun Agunloye"
+                  loading="lazy"
+                  className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-secondary/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              </div>
+              <h4 className="font-black text-gray-900 dark:text-white text-sm">Dr. Peter Oyedotun Agunloye</h4>
+              <p className="text-secondary text-xs font-bold uppercase tracking-widest mt-1">Founder &amp; Proprietor</p>
+              <div className="flex gap-1.5 mt-2 flex-wrap justify-center">
+                {['FCA', 'Ph.D'].map(c => (
+                  <span key={c} className="text-xs bg-red-50 dark:bg-red-900/20 text-secondary border border-secondary/20 px-2 py-0.5 rounded-full font-bold">{c}</span>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Blank slots */}
+            {[1, 2, 3].map((_, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ delay: (idx + 1) * 0.08, duration: 0.5, ease: 'easeOut' }}
+                className="flex flex-col items-center text-center"
+              >
+                <div className="w-full aspect-[3/4] rounded-[2rem] mb-4 shadow-sm bg-gray-50 dark:bg-gray-900 border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-3">
+                  <div className="w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                    <Users size={24} className="text-gray-300 dark:text-gray-600" />
+                  </div>
+                  <p className="text-xs text-gray-300 dark:text-gray-600 font-semibold">Coming Soon</p>
+                </div>
+                <h4 className="font-bold text-gray-300 dark:text-gray-600 text-sm">Team Member</h4>
+                <p className="text-gray-300 dark:text-gray-600 text-xs font-semibold uppercase tracking-widest mt-1">Role — TBA</p>
               </motion.div>
             ))}
           </div>
