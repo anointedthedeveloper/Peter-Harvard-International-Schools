@@ -39,7 +39,7 @@ const Gallery = () => {
   const navigate = (dir) => setSelectedIdx(prev => (prev + dir + filtered.length) % filtered.length);
 
   return (
-    <div className=overflow-x-hidden bg-white dark:bg-gray-950">
+    <div className="overflow-x-hidden bg-white dark:bg-gray-950">
 
       {/* â”€â”€ Hero â”€â”€ */}
       <section className="relative h-[65vh] flex items-center justify-center overflow-hidden">
