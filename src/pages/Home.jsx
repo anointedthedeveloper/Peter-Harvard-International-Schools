@@ -257,6 +257,22 @@ const Home = () => {
         </div>
       </section>
 
+      {/* ── Scroll Ticker ── */}
+      <div className="relative overflow-hidden bg-green-600 shadow-[0_4px_20px_rgba(22,163,74,0.4)] py-3">
+        <div className="flex animate-ticker whitespace-nowrap">
+          {[...Array(3)].map((_, ri) => (
+            <div key={ri} className="flex items-center gap-8 px-8 shrink-0">
+              {['Excellence in Education', 'Admissions Open', 'World-Class Facilities', 'Expert Faculty', 'Global Curriculum', 'Nurturing Future Leaders', 'Peter Harvard Int\'l Schools'].map((text, i) => (
+                <span key={i} className="flex items-center gap-3 text-white font-bold text-sm uppercase tracking-widest">
+                  <span className="w-1.5 h-1.5 rounded-full bg-white/60 shrink-0" />
+                  {text}
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* ── About Preview ── */}
       <section className="py-24 md:py-32 bg-white dark:bg-gray-950 relative overflow-hidden">
         {/* Subtle background element */}

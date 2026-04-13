@@ -27,15 +27,13 @@ const Navbar = ({ darkMode, setDarkMode }) => {
   ];
 
   const isActive = (path) => location.pathname === path;
-
-  // Transparent only on home page before scroll
   const isTransparent = isHome && !isScrolled;
 
   return (
     <nav className={`fixed w-full z-50 transition-all duration-500 ${
       isTransparent
         ? 'py-5 bg-transparent'
-        : 'py-3 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg border-b border-gray-100/50 dark:border-gray-800/50'
+        : 'py-2 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg border-b border-gray-100/50 dark:border-gray-800/50'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
@@ -45,13 +43,13 @@ const Navbar = ({ darkMode, setDarkMode }) => {
             <motion.div
               whileHover={{ scale: 1.05 }}
               transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-              className={`transition-all duration-300 ${isTransparent ? 'w-14 h-14' : 'w-11 h-11'}`}
+              className={`transition-all duration-300 ${isTransparent ? 'w-14 h-14' : 'w-12 h-12'}`}
             >
               <img src="/assets/Badge.jpg" alt="PHIS Logo" className="w-full h-full object-cover rounded-xl" />
             </motion.div>
             <div className="flex flex-col leading-tight">
               <span className={`font-extrabold tracking-tight transition-all duration-300 ${
-                isTransparent ? 'text-xl text-white' : 'text-base text-secondary dark:text-white'
+                isTransparent ? 'text-2xl text-white' : 'text-lg text-secondary dark:text-white'
               }`}>
                 Peter Harvard
               </span>
@@ -69,15 +67,26 @@ const Navbar = ({ darkMode, setDarkMode }) => {
               <Link
                 key={link.name}
                 to={link.path}
-                className={`relative px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 group ${
+                className={`relative px-4 py-2.5 text-sm font-bold rounded-lg transition-all duration-200 group ${
                   isTransparent
-                    ? 'text-white/90 hover:text-white hover:bg-white/10'
+                    ? isActive(link.path)
+                      ? 'text-white bg-white/15'
+                      : 'text-white/90 hover:text-white hover:bg-white/15'
                     : isActive(link.path)
-                      ? 'text-secondary'
-                      : 'text-gray-600 dark:text-gray-300 hover:text-secondary dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800'
+                      ? 'text-secondary bg-secondary/8 dark:bg-secondary/10'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-secondary dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
                 }`}
               >
+                {/* Square bracket decorators on hover */}
+                <span className={`absolute left-1 top-1/2 -translate-y-1/2 text-lg leading-none font-black opacity-0 group-hover:opacity-100 transition-all duration-200 ${
+                  isTransparent ? 'text-white/60' : 'text-secondary/50'
+                }`}>[</span>
+                <span className={`absolute right-1 top-1/2 -translate-y-1/2 text-lg leading-none font-black opacity-0 group-hover:opacity-100 transition-all duration-200 ${
+                  isTransparent ? 'text-white/60' : 'text-secondary/50'
+                }`}>]</span>
+
                 {link.name}
+
                 {/* Active underline */}
                 {isActive(link.path) && (
                   <motion.span
@@ -86,21 +95,15 @@ const Navbar = ({ darkMode, setDarkMode }) => {
                     transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                   />
                 )}
-                {/* Hover underline for non-active */}
-                {!isActive(link.path) && (
-                  <span className={`absolute bottom-0.5 left-3 right-3 h-0.5 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left ${
-                    isTransparent ? 'bg-white/50' : 'bg-secondary/40'
-                  }`} />
-                )}
               </Link>
             ))}
 
-            <div className={`w-px h-5 mx-2 ${isTransparent ? 'bg-white/20' : 'bg-gray-200 dark:bg-gray-700'}`} />
+            <div className={`w-px h-6 mx-2 ${isTransparent ? 'bg-white/20' : 'bg-gray-200 dark:bg-gray-700'}`} />
 
             <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
               <Link
                 to="/portal"
-                className={`flex items-center gap-1.5 px-5 py-2 rounded-full text-sm font-bold transition-all shadow-md ${
+                className={`flex items-center gap-1.5 px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-md ${
                   isActive('/portal')
                     ? 'bg-red-700 text-white shadow-red-500/30'
                     : 'bg-secondary hover:bg-red-700 text-white shadow-red-500/20 hover:shadow-red-500/40'
@@ -113,7 +116,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
             <motion.button
               whileTap={{ scale: 0.9 }}
               onClick={() => setDarkMode(!darkMode)}
-              className={`ml-1 p-2.5 rounded-full transition-all duration-200 ${
+              className={`ml-1 p-2.5 rounded-lg transition-all duration-200 ${
                 isTransparent
                   ? 'bg-white/10 hover:bg-white/20 text-white'
                   : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
@@ -140,7 +143,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
             <motion.button
               whileTap={{ scale: 0.9 }}
               onClick={() => setDarkMode(!darkMode)}
-              className={`p-2 rounded-full transition-colors ${
+              className={`p-2 rounded-lg transition-colors ${
                 isTransparent ? 'text-white hover:bg-white/10' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
               }`}
             >
@@ -182,7 +185,6 @@ const Navbar = ({ darkMode, setDarkMode }) => {
             transition={{ duration: 0.25, ease: 'easeInOut' }}
             className="md:hidden overflow-hidden bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 shadow-2xl"
           >
-            {/* Logo strip */}
             <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
               <img src="/assets/Badge.jpg" alt="PHIS" className="w-10 h-10 rounded-lg object-cover shadow" />
               <div>
