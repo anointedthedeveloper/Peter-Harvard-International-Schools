@@ -33,7 +33,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
     <nav className={`fixed w-full z-50 transition-all duration-500 ${
       isTransparent
         ? 'py-5 bg-transparent'
-        : 'py-2 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg border-b border-gray-100/50 dark:border-gray-800/50'
+        : 'py-2 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg border-b-2 border-green-600/30 dark:border-green-700/30'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
@@ -54,7 +54,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
                 Peter Harvard
               </span>
               <span className={`text-xs font-semibold uppercase tracking-widest transition-all duration-300 ${
-                isTransparent ? 'text-white/70' : 'text-gray-400 dark:text-gray-500'
+                isTransparent ? 'text-white/70' : 'text-green-600 dark:text-green-500'
               }`}>
                 Int'l Schools
               </span>
@@ -71,27 +71,28 @@ const Navbar = ({ darkMode, setDarkMode }) => {
                   isTransparent
                     ? isActive(link.path)
                       ? 'text-white bg-white/15'
-                      : 'text-white/90 hover:text-white hover:bg-white/15'
+                      : 'text-white/90 hover:text-white hover:bg-white/10'
                     : isActive(link.path)
-                      ? 'text-secondary bg-secondary/8 dark:bg-secondary/10'
-                      : 'text-gray-600 dark:text-gray-300 hover:text-secondary dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
+                      ? 'text-gray-900 dark:text-white'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
-                {/* Square bracket decorators on hover */}
-                <span className={`absolute left-1 top-1/2 -translate-y-1/2 text-lg leading-none font-black opacity-0 group-hover:opacity-100 transition-all duration-200 ${
-                  isTransparent ? 'text-white/60' : 'text-secondary/50'
-                }`}>[</span>
-                <span className={`absolute right-1 top-1/2 -translate-y-1/2 text-lg leading-none font-black opacity-0 group-hover:opacity-100 transition-all duration-200 ${
-                  isTransparent ? 'text-white/60' : 'text-secondary/50'
-                }`}>]</span>
+                {/* Green left-border accent on hover */}
+                <span className={`absolute left-0 top-1/2 -translate-y-1/2 w-0.5 rounded-full transition-all duration-200 ${
+                  isTransparent
+                    ? 'h-0 group-hover:h-4 bg-white/70'
+                    : isActive(link.path)
+                      ? 'h-4 bg-green-600'
+                      : 'h-0 group-hover:h-4 bg-green-600'
+                }`} />
 
                 {link.name}
 
-                {/* Active underline */}
+                {/* Active green dot above */}
                 {isActive(link.path) && (
                   <motion.span
-                    layoutId="nav-pill"
-                    className={`absolute bottom-0.5 left-3 right-3 h-0.5 rounded-full ${isTransparent ? 'bg-white' : 'bg-secondary'}`}
+                    layoutId="nav-dot"
+                    className={`absolute -top-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full ${isTransparent ? 'bg-white' : 'bg-green-600'}`}
                     transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                   />
                 )}
