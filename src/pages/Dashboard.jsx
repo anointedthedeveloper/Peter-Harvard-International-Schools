@@ -1063,7 +1063,7 @@ const NewsletterTab = ({ toast }) => {
 
           {/* Send history */}
           <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-5 shadow-sm">
-            <div className="flex items-center justify-between mb-4"><h3 className="font-bold text-gray-900 dark:text-white text-sm">Send History</h3>{sends.length > 0 && (<button onClick={async () => { await supabase.from('newsletter_sends').delete().gt('id', 0); toast('Send history cleared', 'success'); fetchData(); }} className="flex items-center gap-1.5 text-xs text-red-400 hover:text-red-600 font-semibold px-2.5 py-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"><Trash2 size={12} /> Clear History</button>)}</div>
+            <div className="flex items-center justify-between mb-4"><h3 className="font-bold text-gray-900 dark:text-white text-sm">Send History</h3>{sends.length > 0 && (<button onClick={async () => { await supabase.from('newsletter_sends').delete().gte('sent_at', '2000-01-01'); toast('Send history cleared', 'success'); fetchData(); }} className="flex items-center gap-1.5 text-xs text-red-400 hover:text-red-600 font-semibold px-2.5 py-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"><Trash2 size={12} /> Clear History</button>)}</div>
             {sends.length === 0
               ? <p className="text-gray-400 text-sm text-center py-6">No newsletters sent yet.</p>
               : <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
@@ -1162,7 +1162,7 @@ const ChangePasswordTab = ({ toast }) => {
 };
 
 const Dashboard = () => {
-  const { authed, logout } = useAuth();
+  const { authed, loading, logout } = useAuth();
   const navigate = useNavigate();
   const [tab, setTab] = useState('overview');
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -1183,8 +1183,8 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (!authed) navigate('/');
-  }, [authed, navigate]);
+    if (!loading && !authed) navigate('/');
+  }, [authed, loading, navigate]);
 
   const tabs = [
     { key: 'overview',   icon: LayoutDashboard, label: 'Overview' },
