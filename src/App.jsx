@@ -77,9 +77,12 @@ const FloatingIcons = () => {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat on WhatsApp"
-        initial={{ y: 60, opacity: 0 }}
-        animate={{ y: visible ? 0 : 60, opacity: visible ? 1 : 0 }}
-        transition={{ type: 'spring', stiffness: 260, damping: 22 }}
+        initial={{ y: -80, opacity: 0, rotate: -15 }}
+        animate={visible
+          ? { y: 0, opacity: 1, rotate: 0 }
+          : { y: -80, opacity: 0, rotate: -15 }
+        }
+        transition={{ type: 'spring', stiffness: 400, damping: 12, mass: 1.2 }}
         style={{ bottom: waBottom }}
         className="fixed right-6 z-50 w-14 h-14 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-full shadow-xl flex items-center justify-center transition-colors hover:scale-110"
       >
@@ -92,9 +95,12 @@ const FloatingIcons = () => {
       <motion.button
         onClick={() => setTickerOpen(o => !o)}
         aria-label="Toggle announcements"
-        initial={{ y: 60, opacity: 0 }}
-        animate={{ y: visible ? 0 : 60, opacity: visible ? 1 : 0 }}
-        transition={{ type: 'spring', stiffness: 260, damping: 22, delay: 0.06 }}
+        initial={{ y: -80, opacity: 0, rotate: 15 }}
+        animate={visible
+          ? { y: 0, opacity: 1, rotate: 0 }
+          : { y: -80, opacity: 0, rotate: 15 }
+        }
+        transition={{ type: 'spring', stiffness: 400, damping: 12, mass: 1.2, delay: 0.08 }}
         style={{ bottom: btnBottom, transition: 'bottom 0.25s ease' }}
         className="fixed left-6 z-50 w-11 h-11 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-xl flex items-center justify-center"
       >
