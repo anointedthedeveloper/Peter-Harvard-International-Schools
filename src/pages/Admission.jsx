@@ -95,7 +95,7 @@ const Admission = () => {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col">
 
       {/* ── Hero Banner ── */}
-      <section className="relative h-[42vh] min-h-[280px] flex items-end overflow-hidden">
+      <section className="relative h-[42vh] min-h-[280px] flex items-end overflow-hidden pt-24">
         <img
           src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1600&q=70"
           alt="Admission"

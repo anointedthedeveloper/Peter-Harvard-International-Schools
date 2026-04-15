@@ -32,10 +32,10 @@ const Blog = () => {
   });
 
   return (
-    <div className="pt-16 overflow-x-hidden bg-white dark:bg-gray-950">
+    <div className="overflow-x-hidden bg-white dark:bg-gray-950">
 
       {/* ── Hero ── */}
-      <section className="relative h-[65vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[65vh] flex items-center justify-center overflow-hidden pt-24">
         {/* Background image — replace src with your own image */}
         <img
           src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1600&q=70"

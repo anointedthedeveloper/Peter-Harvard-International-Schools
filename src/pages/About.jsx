@@ -33,7 +33,7 @@ const About = () => {
     <div className="overflow-x-hidden bg-white dark:bg-gray-950">
 
       {/* ── Hero Cover ── */}
-      <section className="relative h-[65vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[65vh] flex items-center justify-center overflow-hidden pt-24">
         <img
           src="/assets/aboutus/image2.png"
           alt="About PHIS"

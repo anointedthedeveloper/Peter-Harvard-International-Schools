@@ -65,7 +65,7 @@ const Contact = () => {
     <div className="overflow-x-hidden bg-white dark:bg-gray-950">
 
       {/* ── Hero ── */}
-      <section className="relative h-[65vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[65vh] flex items-center justify-center overflow-hidden pt-24">
         <img
           src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1600&q=70"
           alt="Contact PHIS"

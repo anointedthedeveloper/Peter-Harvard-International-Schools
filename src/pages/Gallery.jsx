@@ -42,7 +42,7 @@ const Gallery = () => {
     <div className="overflow-x-hidden bg-white dark:bg-gray-950">
 
       {/* â”€â”€ Hero â”€â”€ */}
-      <section className="relative h-[65vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[65vh] flex items-center justify-center overflow-hidden pt-24">
         <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1600&q=70" alt="Gallery banner" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/55 to-black/70" />
 
