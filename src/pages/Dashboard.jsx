@@ -6,6 +6,7 @@ import {
   CheckCircle, AlertCircle, Eye, LayoutDashboard, TrendingUp,
   FileText, Download, Pencil, Save, ChevronDown, ChevronUp, Megaphone,
   GripVertical, Menu, ArrowRight, MessageSquare, Mail, MailOpen, Send, Users,
+  RefreshCw, KeyRound,
 } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import { supabase } from '../lib/supabase';
@@ -1062,7 +1063,7 @@ const NewsletterTab = ({ toast }) => {
 
           {/* Send history */}
           <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-5 shadow-sm">
-            <h3 className="font-bold text-gray-900 dark:text-white mb-4 text-sm">Send History</h3>
+            <div className="flex items-center justify-between mb-4"><h3 className="font-bold text-gray-900 dark:text-white text-sm">Send History</h3>{sends.length > 0 && (<button onClick={async () => { await supabase.from('newsletter_sends').delete().gt('id', 0); toast('Send history cleared', 'success'); fetchData(); }} className="flex items-center gap-1.5 text-xs text-red-400 hover:text-red-600 font-semibold px-2.5 py-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"><Trash2 size={12} /> Clear History</button>)}</div>
             {sends.length === 0
               ? <p className="text-gray-400 text-sm text-center py-6">No newsletters sent yet.</p>
               : <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
@@ -1114,6 +1115,52 @@ const NewsletterTab = ({ toast }) => {
 };
 
 // â”€â”€ Dashboard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+// ── Change Password Tab ──────────────────────────────────────────────────────
+const ChangePasswordTab = ({ toast }) => {
+  const [form, setForm] = useState({ newPass: '', confirm: '' });
+  const [loading, setLoading] = useState(false);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (form.newPass !== form.confirm) return toast('Passwords do not match', 'error');
+    if (form.newPass.length < 6) return toast('Password must be at least 6 characters', 'error');
+    setLoading(true);
+    const { error } = await supabase.auth.updateUser({ password: form.newPass });
+    if (error) toast(error.message, 'error');
+    else { toast('Password updated successfully!', 'success'); setForm({ newPass: '', confirm: '' }); }
+    setLoading(false);
+  };
+  return (
+    <div className="max-w-md">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-sm">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 bg-secondary/10 rounded-xl flex items-center justify-center">
+            <KeyRound size={18} className="text-secondary" />
+          </div>
+          <div>
+            <h3 className="font-bold text-gray-900 dark:text-white">Change Password</h3>
+            <p className="text-xs text-gray-400">Update your admin account password</p>
+          </div>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">New Password</label>
+            <input type="password" value={form.newPass} onChange={e => setForm({ ...form, newPass: e.target.value })} required minLength={6} placeholder="Min. 6 characters" className={inputClass} />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Confirm New Password</label>
+            <input type="password" value={form.confirm} onChange={e => setForm({ ...form, confirm: e.target.value })} required placeholder="Repeat new password" className={inputClass} />
+          </div>
+          <motion.button type="submit" disabled={loading} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+            className="w-full bg-secondary hover:bg-red-700 disabled:opacity-60 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 text-sm shadow-md shadow-red-500/20">
+            {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><KeyRound size={15} /> Update Password</>}
+          </motion.button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 const Dashboard = () => {
   const { authed, logout } = useAuth();
   const navigate = useNavigate();
@@ -1146,10 +1193,11 @@ const Dashboard = () => {
     { key: 'blog',       icon: BookOpen,         label: 'Blog Posts' },
     { key: 'ticker',     icon: Megaphone,        label: 'Ticker' },
     { key: 'messages',   icon: MessageSquare,    label: 'Messages' },
-    { key: 'newsletter',  icon: Send,             label: 'Newsletter' },
+    { key: 'newsletter',  icon: Send,             label: 'Newsletter' },
+    { key: 'password',   icon: KeyRound,         label: 'Change Password' },
   ];
 
-  const tabLabels = { overview: 'Overview', admissions: 'Admissions', gallery: 'Gallery', blog: 'Blog Posts', ticker: 'Ticker', messages: 'Messages', newsletter: 'Newsletter' };
+  const tabLabels = { overview: 'Overview', admissions: 'Admissions', gallery: 'Gallery', blog: 'Blog Posts', ticker: 'Ticker', messages: 'Messages', newsletter: 'Newsletter', password: 'Change Password' };
 
   const Sidebar = () => (
     <aside className={`flex flex-col w-60 shrink-0 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 fixed top-14 bottom-0 left-0 overflow-y-auto z-20 transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
@@ -1216,6 +1264,7 @@ const Dashboard = () => {
         </button>
         <h1 className="font-extrabold text-gray-900 dark:text-white text-sm">{tabLabels[tab]}</h1>
         <div className="ml-auto flex items-center gap-2">
+          <button onClick={() => window.location.reload()} className="p-1.5 text-gray-400 hover:text-secondary transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" title="Reload page"><RefreshCw size={14} /></button>
           <button
             onClick={() => window.open('/', '_blank')}
             className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-secondary transition-colors font-semibold px-2 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
@@ -1267,6 +1316,7 @@ const Dashboard = () => {
               {tab === 'ticker'     && <TickerTab toast={toast} />}
               {tab === 'messages'   && <MessagesTab toast={toast} onRead={(n) => setUnreadCount(n)} />}
               {tab === 'newsletter' && <NewsletterTab toast={toast} />}
+              {tab === 'password'   && <ChangePasswordTab toast={toast} />}
             </motion.div>
           </AnimatePresence>
         </main>

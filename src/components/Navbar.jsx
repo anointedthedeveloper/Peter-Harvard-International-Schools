@@ -144,14 +144,6 @@ const Navbar = ({ darkMode, setDarkMode }) => {
             transition={{ duration: 0.22, ease: 'easeInOut' }}
             className="md:hidden overflow-hidden bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 shadow-xl"
           >
-            <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
-              <img src="/assets/Badge.jpg" alt="PHIS" className="w-10 h-10 rounded-lg object-cover" />
-              <div>
-                <p className="font-extrabold text-gray-900 dark:text-white text-sm leading-tight">Peter Harvard Int'l Schools</p>
-                <p className="text-xs text-gray-400 uppercase tracking-widest">Kubwa, Abuja</p>
-              </div>
-            </div>
-
             <div className="px-4 py-3 space-y-1">
               {navLinks.map((link, i) => (
                 <motion.div
