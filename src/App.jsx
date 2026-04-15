@@ -52,7 +52,7 @@ const FloatingIcons = () => {
 
   const [tickerOpen, setTickerOpen] = useState(false);
   const [tickerItems, setTickerItems] = useState([
-    'Excellence in Education', 'Admissions Open', 'World-Class Facilities',
+    'Responsibility & Excellence', 'Admissions Open', 'World-Class Facilities',
     'Expert Faculty', 'Global Curriculum', "Peter Harvard Int'l Schools",
   ]);
 

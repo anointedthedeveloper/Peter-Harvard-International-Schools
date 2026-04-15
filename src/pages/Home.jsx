@@ -68,8 +68,8 @@ const heroSlides = [
   },
   {
     image: '/assets/slideshow/hero5.png',
-    title: 'Global',
-    subtitle: 'Perspective',
+    title: 'Globals',
+    subtitle: 'Perspectives',
     desc: 'Preparing students for success in an increasingly interconnected world.'
   }
 ];
@@ -198,7 +198,7 @@ const features = [
   { icon: BookOpen, title: 'Premium Curriculum', desc: 'International standard curriculum focused on holistic development.' },
   { icon: Users, title: 'Expert Educators', desc: 'Highly qualified teachers dedicated to student success.' },
   { icon: Award, title: 'Modern Facilities', desc: 'State-of-the-art labs, libraries, and sports complexes.' },
-  { icon: Globe, title: 'Global Mindset', desc: 'Preparing students for success in an interconnected world.' },
+  { icon: Globe, title: 'Global Mindsets', desc: 'Preparing students for success in an interconnected world.' },
 ];
 
 const galleryImages = [
