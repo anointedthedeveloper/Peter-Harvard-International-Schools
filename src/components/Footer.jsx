@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Facebook, Instagram, Mail, Phone, MapPin, Send, CheckCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../lib/supabase';
 
 const WhatsAppIcon = () => (
@@ -33,12 +34,46 @@ const FooterNewsletter = () => {
         placeholder="Your email address"
         className="w-full px-4 py-2.5 text-sm bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary dark:text-white transition-all"
       />
-      <button disabled={status === 'loading'} className="w-full bg-secondary hover:bg-red-700 disabled:opacity-60 text-white font-bold py-2.5 rounded-lg transition-colors text-sm shadow-md shadow-red-500/20 flex items-center justify-center gap-2">
-        {status === 'loading' ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Send size={13} /> Subscribe</>}
-      </button>
-      {status === 'success' && <p className="text-green-600 text-xs font-semibold">You're subscribed!</p>}
-      {status === 'already' && <p className="text-yellow-600 text-xs font-semibold">Already subscribed.</p>}
-      {status === 'error' && <p className="text-red-500 text-xs font-semibold">Something went wrong.</p>}
+      <AnimatePresence mode="wait">
+        {status === 'success' ? (
+          <motion.div
+            key="success"
+            initial={{ opacity: 0, scale: 0.85, y: 6 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.85, y: -6 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 22 }}
+            className="w-full bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg py-2.5 flex items-center justify-center gap-2"
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.1, type: 'spring', stiffness: 400, damping: 15 }}
+            >
+              <CheckCircle size={16} className="text-green-600" />
+            </motion.div>
+            <span className="text-green-700 dark:text-green-400 text-sm font-bold">You're subscribed!</span>
+          </motion.div>
+        ) : (
+          <motion.button
+            key="btn"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            disabled={status === 'loading'}
+            className="w-full bg-secondary hover:bg-red-700 disabled:opacity-60 text-white font-bold py-2.5 rounded-lg transition-colors text-sm shadow-md shadow-red-500/20 flex items-center justify-center gap-2"
+          >
+            {status === 'loading' ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Send size={13} /> Subscribe</>}
+          </motion.button>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {status === 'already' && (
+          <motion.p initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="text-yellow-600 text-xs font-semibold">Already subscribed.</motion.p>
+        )}
+        {status === 'error' && (
+          <motion.p initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="text-red-500 text-xs font-semibold">Something went wrong.</motion.p>
+        )}
+      </AnimatePresence>
     </form>
   );
 };
