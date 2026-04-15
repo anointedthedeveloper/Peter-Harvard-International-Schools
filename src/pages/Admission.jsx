@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Phone, MapPin, Upload, ChevronRight, X, CheckCircle, Eye, Edit2, PhoneCall, GraduationCap, Calendar } from 'lucide-react';
+import { User, Phone, MapPin, Upload, ChevronRight, X, CheckCircle, Eye, Edit2, PhoneCall } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
@@ -251,7 +251,15 @@ const Admission = () => {
                           </div>
                           <div className="space-y-1.5">
                             <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date of Birth *</label>
-                            <input type="date" name="dob" required value={form.dob} onChange={handleChange} className={inputClass} />
+                            <input
+                              type="date"
+                              name="dob"
+                              required
+                              value={form.dob}
+                              onChange={handleChange}
+                              max={new Date().toISOString().split('T')[0]}
+                              className={`${inputClass} [color-scheme:light] dark:[color-scheme:dark]`}
+                            />
                           </div>
                           <div className="space-y-1.5">
                             <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Gender *</label>
