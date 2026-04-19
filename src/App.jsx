@@ -17,6 +17,7 @@ import AdminLogin from './pages/AdminLogin';
 import Dashboard from './pages/Dashboard';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
+import Unsubscribe from './pages/Unsubscribe';
 import NotFound from './pages/NotFound';
 import { supabase } from './lib/supabase';
 import { AuthProvider } from './lib/auth';
@@ -161,6 +162,7 @@ const AnimatedRoutes = () => {
           <Route path="/admission" element={<PageTransition><Admission /></PageTransition>} />
           <Route path="/blog" element={<PageTransition><Blog /></PageTransition>} />
           <Route path="/blog/:id" element={<PageTransition><BlogPost /></PageTransition>} />
+          <Route path="/unsubscribe" element={<PageTransition><Unsubscribe /></PageTransition>} />
           <Route path="/login" element={<AdminLogin />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
