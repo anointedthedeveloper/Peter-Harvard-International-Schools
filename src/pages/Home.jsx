@@ -225,7 +225,7 @@ const Home = () => {
     <div className="overflow-x-hidden bg-white dark:bg-gray-950">
 
       {/* ── Hero Slideshow ── */}
-      <section className="relative h-[55vh] sm:h-[70vh] lg:h-screen min-h-[360px] overflow-hidden">
+      <section className="relative h-[60vh] sm:h-[70vh] lg:h-screen min-h-[400px] overflow-hidden">
 
         {/* Overlay gradient for readability */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/20 z-10" />
@@ -250,7 +250,7 @@ const Home = () => {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-white mb-2 sm:mb-3"
+              className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-white mb-2 sm:mb-3 [text-shadow:0_2px_12px_rgba(0,0,0,0.4)]"
             >
               {heroSlides[currentSlide].title}{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-300">
@@ -442,7 +442,7 @@ const Home = () => {
             </motion.div>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 h-auto md:h-[600px]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 h-auto md:h-[600px]">
             {galleryImages.map((img, i) => (
               <motion.div
                 key={i}
@@ -475,14 +475,14 @@ const Home = () => {
       </section>
 
       {/* ── Stats ── */}
-      <section className="py-14 md:py-24 bg-green-700 relative overflow-hidden">
+      <section className="py-12 md:py-24 bg-green-700 relative overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-br from-green-600 via-green-700 to-green-800" />
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
         </div>
 
         <div className="max-w-6xl mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             <StatCard value={yearsRunning} suffix="+" label="Years of Excellence" />
             <StatCard value={2000} suffix="+" label="Students Enrolled" />
             <StatCard value={150} suffix="+" label="Expert Faculty" />
@@ -495,12 +495,12 @@ const Home = () => {
       <BlogSection />
 
       {/* ── Newsletter Banner ── */}
-      <section className="py-12 md:py-16 bg-gray-50 dark:bg-gray-900 border-y border-gray-100 dark:border-gray-800">
+      <section className="py-10 md:py-16 bg-gray-50 dark:bg-gray-900 border-y border-gray-100 dark:border-gray-800">
         <div className="max-w-xl mx-auto px-4 text-center">
           <motion.div {...fadeUp}>
             <span className="text-secondary text-xs font-bold uppercase tracking-[0.3em] mb-3 block">Stay in the Loop</span>
-            <h2 className="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-3 tracking-tight">Get School Updates</h2>
-            <p className="text-gray-500 dark:text-gray-400 mb-8 font-medium">Subscribe for the latest news, events, and announcements from Peter Harvard.</p>
+            <h2 className="text-2xl md:text-4xl font-black text-gray-900 dark:text-white mb-3 tracking-tight">Get School Updates</h2>
+            <p className="text-gray-500 dark:text-gray-400 mb-6 font-medium text-sm md:text-base">Subscribe for the latest news, events, and announcements from Peter Harvard.</p>
             <NewsletterForm />
           </motion.div>
         </div>

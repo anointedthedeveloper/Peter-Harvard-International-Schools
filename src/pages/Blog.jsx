@@ -35,7 +35,7 @@ const Blog = () => {
     <div className="overflow-x-hidden bg-white dark:bg-gray-950">
 
       {/* ── Hero ── */}
-      <section className="relative h-[65vh] flex items-center justify-center overflow-hidden pt-24">
+      <section className="relative h-[55vh] sm:h-[65vh] flex items-center justify-center overflow-hidden pt-24">
         {/* Background image — replace src with your own image */}
         <img
           src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1600&q=70"
@@ -53,7 +53,7 @@ const Blog = () => {
           <p className="bg-white/10 backdrop-blur-sm border border-white/20 text-white text-xs font-bold uppercase tracking-[0.25em] px-5 py-2 rounded-full inline-block mb-6">
             School Blog
           </p>
-          <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-5 leading-[1.1]">News &amp; Updates</h1>
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black tracking-tight mb-5 leading-[1.1]">News &amp; Updates</h1>
           <div className="w-20 h-1 bg-secondary mx-auto mb-6 rounded-full" />
           <p className="text-lg md:text-xl max-w-2xl mx-auto opacity-85 leading-relaxed font-medium">
             Stay informed with the latest happenings, events, and achievements at Peter Harvard.
@@ -73,7 +73,7 @@ const Blog = () => {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex flex-col sm:flex-row gap-4 mb-16 items-start sm:items-center"
+            className="flex flex-col sm:flex-row gap-3 mb-10 sm:mb-16 items-start sm:items-center"
           >
             {/* Search */}
             <div className="relative w-full sm:max-w-xs">

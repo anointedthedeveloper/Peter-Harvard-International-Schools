@@ -42,7 +42,7 @@ const Gallery = () => {
     <div className="overflow-x-hidden bg-white dark:bg-gray-950">
 
       {/* â”€â”€ Hero â”€â”€ */}
-      <section className="relative h-[65vh] flex items-center justify-center overflow-hidden pt-24">
+      <section className="relative h-[55vh] sm:h-[65vh] flex items-center justify-center overflow-hidden pt-24">
         <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1600&q=70" alt="Gallery banner" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/55 to-black/70" />
 
@@ -57,7 +57,7 @@ const Gallery = () => {
           <p className="bg-white/10 backdrop-blur-sm border border-white/20 text-white text-xs font-bold uppercase tracking-[0.25em] px-5 py-2 rounded-full inline-block mb-6">
             Visual Tour
           </p>
-          <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-5 leading-[1.1]">Our Gallery</h1>
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black tracking-tight mb-5 leading-[1.1]">Our Gallery</h1>
           <div className="w-20 h-1 bg-secondary mx-auto mb-6 rounded-full" />
           <p className="text-lg md:text-xl max-w-2xl mx-auto opacity-85 leading-relaxed font-medium">
             Capturing the moments that define the PHIS experience.
@@ -77,13 +77,13 @@ const Gallery = () => {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex flex-wrap justify-center gap-3 mb-16"
+            className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10 sm:mb-16"
           >
             {CATEGORIES.map(cat => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-7 py-3 rounded-2xl font-bold text-sm transition-all duration-300 ${
+                className={`px-4 sm:px-7 py-2.5 sm:py-3 rounded-2xl font-bold text-xs sm:text-sm transition-all duration-300 ${
                   activeCategory === cat
                     ? 'bg-secondary text-white shadow-lg shadow-red-500/30 scale-105'
                     : 'bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-800'

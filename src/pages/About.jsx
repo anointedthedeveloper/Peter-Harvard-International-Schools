@@ -33,7 +33,7 @@ const About = () => {
     <div className="overflow-x-hidden bg-white dark:bg-gray-950">
 
       {/* ── Hero Cover ── */}
-      <section className="relative h-[65vh] flex items-center justify-center overflow-hidden pt-24">
+      <section className="relative h-[55vh] sm:h-[65vh] flex items-center justify-center overflow-hidden pt-24">
         <img
           src="/assets/aboutus/image2.png"
           alt="About PHIS"
@@ -50,7 +50,7 @@ const About = () => {
           <p className="bg-white/10 backdrop-blur-sm border border-white/20 text-white text-xs font-bold uppercase tracking-[0.25em] px-5 py-2 rounded-full inline-block mb-6">
             Est. {FOUNDED} · Kubwa, Abuja
           </p>
-          <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-5 leading-[1.1]">About Our School</h1>
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black tracking-tight mb-5 leading-[1.1]">About Our School</h1>
           <div className="w-20 h-1 bg-secondary mx-auto mb-6 rounded-full" />
           <p className="text-lg md:text-xl max-w-2xl mx-auto opacity-85 leading-relaxed font-medium">
             A beacon of academic excellence and character development since {FOUNDED}.
@@ -412,14 +412,14 @@ const About = () => {
               <p className="text-lg md:text-xl mb-12 text-white/90 font-medium leading-relaxed max-w-2xl mx-auto">
                 Discover a community where your child's potential is nurtured and their future is built on a foundation of excellence.
               </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.98 }}>
-                  <Link to="/admission" className="bg-white text-secondary hover:bg-gray-100 px-12 py-5 rounded-2xl text-lg font-black transition-all shadow-2xl block">
+                  <Link to="/admission" className="bg-white text-secondary hover:bg-gray-100 px-8 sm:px-12 py-4 sm:py-5 rounded-2xl text-base sm:text-lg font-black transition-all shadow-2xl block text-center">
                     Apply for Admission
                   </Link>
                 </motion.div>
                 <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.98 }}>
-                  <Link to="/contact" className="bg-transparent text-white border-2 border-white/30 hover:bg-white/10 px-12 py-5 rounded-2xl text-lg font-black transition-all block">
+                  <Link to="/contact" className="bg-transparent text-white border-2 border-white/30 hover:bg-white/10 px-8 sm:px-12 py-4 sm:py-5 rounded-2xl text-base sm:text-lg font-black transition-all block text-center">
                     Contact Registrar
                   </Link>
                 </motion.div>

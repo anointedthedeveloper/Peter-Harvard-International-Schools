@@ -65,7 +65,7 @@ const Contact = () => {
     <div className="overflow-x-hidden bg-white dark:bg-gray-950">
 
       {/* ── Hero ── */}
-      <section className="relative h-[65vh] flex items-center justify-center overflow-hidden pt-24">
+      <section className="relative h-[55vh] sm:h-[65vh] flex items-center justify-center overflow-hidden pt-24">
         <img
           src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1600&q=70"
           alt="Contact PHIS"
@@ -83,7 +83,7 @@ const Contact = () => {
           <p className="bg-white/10 backdrop-blur-sm border border-white/20 text-white text-xs font-bold uppercase tracking-[0.25em] px-5 py-2 rounded-full inline-block mb-6">
             Reach Out
           </p>
-          <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-5 leading-[1.1]">Get In Touch</h1>
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black tracking-tight mb-5 leading-[1.1]">Get In Touch</h1>
           <div className="w-20 h-1 bg-secondary mx-auto mb-6 rounded-full" />
           <p className="text-lg md:text-xl max-w-2xl mx-auto opacity-85 leading-relaxed font-medium">
             Have questions? We're here to help you every step of the way.
@@ -151,7 +151,7 @@ const Contact = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.7, ease: 'easeOut' }}
-              className="lg:w-3/5 bg-white dark:bg-gray-900 p-8 md:p-12 rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-gray-100 dark:border-gray-800"
+              className="lg:w-3/5 bg-white dark:bg-gray-900 p-6 sm:p-8 md:p-12 rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-gray-100 dark:border-gray-800"
             >
               {submitted ? (
                 <motion.div
