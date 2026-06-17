@@ -120,12 +120,6 @@ npm run build
 
 ### Environment Variables
 
-Create a `.env` file (never commit this):
-
-```env
-VITE_SUPABASE_URL=https://wmoxdrmleucowwaaqsrq.supabase.co
-VITE_SUPABASE_ANON_KEY=<your_anon_key>
-```
 
 For the Edge Function, set in Supabase dashboard → Edge Functions → Secrets:
 ```
