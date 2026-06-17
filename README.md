@@ -1,6 +1,7 @@
 # Peter Harvard International Schools — Official Website
 
-> **Live Site:** [peterharvardschools.com](https://peterharvardschools.com)  
+> **Live Site:** [peterharvardschools.cloud](https://peterharvardschools.cloud)
+> **Portal:** [portal.peterharvardschools.cloud](https://portal.peterharvardschools.cloud)
 > **Stack:** React · Vite · Tailwind CSS · Supabase · Resend · Framer Motion
 
 ---
@@ -171,7 +172,7 @@ To ensure newsletters land in inbox:
 
 ## Developer
 
-Built by **Anointed Agunloye**  
+Built by **Anointed Agunloye**
 [anobyte.online](https://anobyte.online)
 
 ---

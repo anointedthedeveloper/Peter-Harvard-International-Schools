@@ -117,7 +117,7 @@ const LoginForm = ({ type, onBack }) => {
 };
 
 const portals = [
-  { key: 'student', icon: UserCircle, title: 'Student & Parent', desc: 'Access academic records, attendance, assignments, and results.', href: 'https://portal.peterharvardschools.com' },
+  { key: 'student', icon: UserCircle, title: 'Student & Parent', desc: 'Access academic records, attendance, assignments, and results.', href: 'https://portal.peterharvardschools.cloud' },
   { key: 'admin', icon: ShieldCheck, title: 'Admin & Staff', desc: 'Manage school operations, student data, and staff information.', href: '/login' },
 ];
 
